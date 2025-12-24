@@ -4,20 +4,20 @@
 import { useState } from "react"
 import { 
   Target, 
-  GraduationCap, 
-  Shield, 
-  Zap, 
-  Award, 
   Users, 
   Phone, 
   MessageSquare,
   ChevronRight,
   CheckCircle,
   Plane,
-  Cpu,
   Rocket,
   Briefcase,
-  Clock
+  TrendingUp,
+  Lightbulb,
+  Handshake,
+  Network,
+  Globe,
+  Shield
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -26,7 +26,7 @@ export default function InvestNow() {
     name: "",
     email: "",
     phone: "",
-    interest: "general"
+    role: "investor"
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -35,138 +35,134 @@ export default function InvestNow() {
     console.log(formData)
   }
 
-  const programSteps = [
+  const eventSteps = [
     {
       number: 1,
-      title: "Getting Started",
-      description: "Foundation in drone technology and regulations",
+      title: "Application & Screening",
+      description: "Submit your application for evaluation",
       icon: Rocket
     },
     {
       number: 2,
-      title: "Simulator Mastery & Flight Theory",
-      description: "Virtual training and theoretical knowledge",
-      icon: Cpu
+      title: "Pitch Preparation",
+      description: "Refine your pitch with expert guidance",
+      icon: Lightbulb
     },
     {
       number: 3,
-      title: "Building Your Own Drone",
-      description: "Hands-on assembly and customization",
-      icon: Target
+      title: "Investor Meetings",
+      description: "Present to top-tier investors",
+      icon: Handshake
     },
     {
       number: 4,
-      title: "Programming & Software Setup",
-      description: "Coding, software configuration, and test flights",
-      icon: Zap
+      title: "Deal Negotiation",
+      description: "Secure game-changing funding",
+      icon: TrendingUp
     },
     {
       number: 5,
-      title: "Flying & Improvising Skills",
-      description: "Advanced flight techniques and problem-solving",
-      icon: Target
+      title: "Ecosystem Integration",
+      description: "Network with industry leaders",
+      icon: Network
     },
     {
       number: 6,
-      title: "Industry-Ready Challenges",
-      description: "Real-world scenarios and practical applications",
+      title: "Growth Support",
+      description: "Post-investment mentorship & support",
       icon: Briefcase
-    },
-    {
-      number: 7,
-      title: "Certification & Job Support",
-      description: "DGCA certification and career placement assistance",
-      icon: Award
     }
   ]
 
   const targetAudience = [
-    "DGCA Certified Pilots",
-    "Armed Forces Personnel",
-    "Professional Aviators",
-    "Engineering Students",
-    "Technology Enthusiasts",
-    "Defence Contractors"
+    { role: "Startups", description: "Pitch groundbreaking ideas" },
+    { role: "Investors", description: "Discover promising ventures" },
+    { role: "Ecosystem Partners", description: "Network with innovators" },
+    { role: "Industry Leaders", description: "Witness next big ideas" }
   ]
 
   return (
     <section className="relative min-h-screen py-20 overflow-hidden">
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-black to-emerald-900/30" />
+      <div className="absolute inset-0 bg-gradient-to-br from-defence-navy via-black to-purple-900/30" />
       
       {/* Animated Elements */}
-      <div className="absolute top-20 right-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 left-20 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
+      <div className="absolute top-20 right-20 w-72 h-72 bg-defence-saffron/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
       
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/30 mb-6">
-            <Target className="w-4 h-4 text-blue-400" />
-            <p className="text-blue-400 text-sm font-mono tracking-widest">DRONE TECHNOLOGY PROGRAM</p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-defence-saffron/10 border border-defence-saffron/30 mb-6">
+            <Target className="w-4 h-4 text-defence-saffron" />
+            <p className="text-defence-saffron text-sm font-mono tracking-widest">DEFSAT INNOVATION DEALROOM</p>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="block bg-gradient-to-r from-blue-400 via-white to-emerald-400 bg-clip-text text-transparent">
-              Unlock Your Potential
+            <span className="block bg-gradient-to-r from-defence-saffron via-white to-blue-400 bg-clip-text text-transparent">
+              Your Next Big Win
             </span>
-            <span className="block text-white mt-4">Step into the Future of Drones</span>
+            <span className="block text-white mt-4">Awaits at Nebula DealRoom</span>
           </h1>
           
           <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            Our intensive program equips aspiring remote pilots with practical skills in drone building, 
-            flying, and safe operation through guided, hands-on practice.
+            Are you looking for your next big win, or an enthusiast eager to witness the future of 
+            DefSAT Innovation? You can't afford to miss the DealRoom. This is where the future of 
+            🇮🇳 Defence, DeepTech, & SpaceTech ventures and investments collide.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 mb-20">
-          {/* Left Column - Program Overview */}
+          {/* Left Column - Event Overview */}
           <div className="space-y-12">
             {/* Who is it for? */}
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
               <div className="flex items-center gap-3 mb-6">
-                <Users className="w-6 h-6 text-blue-400" />
-                <h2 className="text-2xl font-bold text-white">Who is it for?</h2>
+                <Users className="w-6 h-6 text-defence-saffron" />
+                <h2 className="text-2xl font-bold text-white">Who Should Join?</h2>
               </div>
               
               <div className="space-y-4 mb-8">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-400 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-defence-saffron mt-1 flex-shrink-0" />
                   <div>
-                    <p className="text-white font-medium">Are you DGCA Certified?</p>
-                    <p className="text-white/60 text-sm mt-1">What are you waiting for?</p>
+                    <p className="text-white font-medium">Limited Spots Available</p>
+                    <p className="text-white/60 text-sm mt-1">Secure your position now</p>
                   </div>
                 </div>
                 
                 <p className="text-white/80 leading-relaxed">
-                  Ideal for <span className="text-blue-400 font-medium">Armed Forces</span>,{" "}
-                  <span className="text-blue-400 font-medium">Professional Pilots</span>, and{" "}
-                  <span className="text-blue-400 font-medium">Students</span> looking to build a career 
-                  in the fast-growing world of Unmanned Aerial Vehicles (UAVs), blending theoretical 
-                  knowledge with real-time applications.
+                  This is more than just an audition — it's where the future of Bharat 2.0 in 
+                  Defence, DeepTech, & SpaceTech ventures and investments collide. Be part of 
+                  this unmissable experience.
                 </p>
               </div>
               
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-4">
                 {targetAudience.map((item, index) => (
                   <div 
                     key={index} 
-                    className="flex items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/10 hover:border-blue-500/30 transition-all"
+                    className="flex items-start gap-3 p-4 rounded-lg bg-white/5 border border-white/10 hover:border-defence-saffron/30 transition-all group"
                   >
-                    <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                    <span className="text-white text-sm">{item}</span>
+                    <div className="w-2 h-2 bg-defence-saffron rounded-full mt-2" />
+                    <div className="flex-1">
+                      <div className="text-white font-medium mb-1">{item.role}</div>
+                      <div className="text-white/60 text-sm">{item.description}</div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-defence-saffron opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Contact & RSVP */}
-            <div className="bg-gradient-to-br from-blue-900/50 to-emerald-900/30 rounded-2xl p-8 border border-blue-500/20">
+            {/* Apply Now Section */}
+            <div className="bg-gradient-to-br from-defence-navy/50 to-purple-900/30 rounded-2xl p-8 border border-defence-saffron/20">
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-3">Ready to Take Flight?</h3>
+                  <h3 className="text-2xl font-bold text-white mb-3">Ready to Make History?</h3>
                   <p className="text-white/80">
-                    Join India's premier drone technology program and launch your career in UAV technology.
+                    Join us at Nebula DealRoom and be part of the innovation revolution. 
+                    Limited spots are available for this exclusive event.
                   </p>
                 </div>
                 
@@ -174,22 +170,22 @@ export default function InvestNow() {
                   <Button 
                     asChild
                     size="lg"
-                    className="w-full bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600 text-white py-6 text-lg rounded-xl"
+                    className="w-full bg-gradient-to-r from-defence-saffron to-orange-600 hover:from-orange-600 hover:to-defence-saffron text-white py-6 text-lg rounded-xl"
                   >
                     <a 
-                      href="https://bit.ly/43j1qfV" 
+                      href="https://bit.ly/4i9MSEP" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-3"
                     >
-                      <Plane className="w-5 h-5" />
-                      RSVP Now - Limited Seats Available
+                      <Rocket className="w-5 h-5" />
+                      Apply Now - Limited Seats Available
                       <ChevronRight className="w-5 h-5" />
                     </a>
                   </Button>
                   
                   <div className="text-center text-white/60 text-sm">
-                    or contact us directly
+                    or connect with our team
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
@@ -199,7 +195,7 @@ export default function InvestNow() {
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 p-4 rounded-lg bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
                     >
-                      <MessageSquare className="w-5 h-5 text-emerald-400" />
+                      <MessageSquare className="w-5 h-5 text-green-400" />
                       <span className="text-white font-medium">WhatsApp</span>
                     </a>
                     
@@ -216,36 +212,36 @@ export default function InvestNow() {
             </div>
           </div>
 
-          {/* Right Column - Program Structure */}
+          {/* Right Column - Event Structure */}
           <div className="space-y-8">
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
               <div className="flex items-center gap-3 mb-8">
-                <GraduationCap className="w-6 h-6 text-emerald-400" />
+                <TrendingUp className="w-6 h-6 text-defence-saffron" />
                 <h2 className="text-2xl font-bold text-white">What to Expect?</h2>
               </div>
               
               <div className="space-y-6">
-                {programSteps.map((step) => {
+                {eventSteps.map((step) => {
                   const Icon = step.icon
                   return (
                     <div 
                       key={step.number} 
-                      className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-all group"
+                      className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-defence-saffron/30 transition-all group"
                     >
-                      <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-defence-saffron to-orange-600 flex items-center justify-center">
                         <span className="text-white font-bold text-lg">{step.number}</span>
                       </div>
                       
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <Icon className="w-5 h-5 text-blue-400" />
+                          <Icon className="w-5 h-5 text-defence-saffron" />
                           <h3 className="text-lg font-bold text-white">{step.title}</h3>
                         </div>
                         <p className="text-white/70">{step.description}</p>
                       </div>
                       
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ChevronRight className="w-5 h-5 text-blue-400" />
+                        <ChevronRight className="w-5 h-5 text-defence-saffron" />
                       </div>
                     </div>
                   )
@@ -253,60 +249,75 @@ export default function InvestNow() {
               </div>
             </div>
 
-            {/* Certification & Benefits */}
+            {/* Key Benefits */}
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
                 <div className="flex items-center gap-3 mb-4">
-                  <Award className="w-5 h-5 text-emerald-400" />
-                  <h3 className="text-white font-bold">Certification & Recognition</h3>
+                  <Lightbulb className="w-5 h-5 text-defence-saffron" />
+                  <h3 className="text-white font-bold">For Startups</h3>
                 </div>
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2 text-white/80 text-sm">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" />
-                    DGCA Approved Certification
+                    <CheckCircle className="w-4 h-4 text-defence-saffron" />
+                    Pitch to top-tier investors
                   </li>
                   <li className="flex items-center gap-2 text-white/80 text-sm">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" />
-                    Industry Recognized Credentials
+                    <CheckCircle className="w-4 h-4 text-defence-saffron" />
+                    Secure game-changing funding
                   </li>
                   <li className="flex items-center gap-2 text-white/80 text-sm">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" />
-                    Placement Assistance
+                    <CheckCircle className="w-4 h-4 text-defence-saffron" />
+                    Expert mentorship & guidance
                   </li>
                 </ul>
               </div>
               
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
                 <div className="flex items-center gap-3 mb-4">
-                  <Shield className="w-5 h-5 text-blue-400" />
-                  <h3 className="text-white font-bold">Post-Course Support</h3>
+                  <Handshake className="w-5 h-5 text-blue-400" />
+                  <h3 className="text-white font-bold">For Investors</h3>
                 </div>
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2 text-white/80 text-sm">
                     <CheckCircle className="w-4 h-4 text-blue-400" />
-                    1-Year Mentorship Program
+                    Discover promising startups
                   </li>
                   <li className="flex items-center gap-2 text-white/80 text-sm">
                     <CheckCircle className="w-4 h-4 text-blue-400" />
-                    Job Placement Assistance
+                    Seize investment opportunities
                   </li>
                   <li className="flex items-center gap-2 text-white/80 text-sm">
                     <CheckCircle className="w-4 h-4 text-blue-400" />
-                    Ongoing Technical Support
+                    Network with industry leaders
                   </li>
                 </ul>
+              </div>
+            </div>
+
+            {/* Special Focus Areas */}
+            <div className="bg-gradient-to-br from-defence-navy/50 to-blue-900/30 rounded-xl p-6 border border-white/10">
+              <div className="flex items-center gap-3 mb-4">
+                <Globe className="w-5 h-5 text-white" />
+                <h3 className="text-white font-bold">Focus Areas</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {["Defence Tech", "DeepTech", "SpaceTech", "AI & Robotics", "Cyber Security", "Quantum Computing"].map((area, index) => (
+                  <span key={index} className="px-3 py-1 rounded-full bg-white/10 text-white text-sm border border-white/20">
+                    {area}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Investment Form */}
+        {/* Registration Form */}
         {/* <div className="max-w-3xl mx-auto">
-          <div className="bg-gradient-to-br from-blue-900/30 to-emerald-900/20 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
+          <div className="bg-gradient-to-br from-defence-navy/30 to-purple-900/20 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-white mb-3">Reserve Your Spot</h2>
+              <h2 className="text-3xl font-bold text-white mb-3">Express Your Interest</h2>
               <p className="text-white/70">
-                Fill out this form and our team will contact you with program details and enrollment information.
+                Submit your details and our team will contact you with event details and participation information.
               </p>
             </div>
             
@@ -318,7 +329,7 @@ export default function InvestNow() {
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-500"
+                    className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-defence-saffron"
                     placeholder="Enter your full name"
                     required
                   />
@@ -330,7 +341,7 @@ export default function InvestNow() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-500"
+                    className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-defence-saffron"
                     placeholder="Enter your email"
                     required
                   />
@@ -343,48 +354,49 @@ export default function InvestNow() {
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-defence-saffron"
                   placeholder="+91 98765 43210"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-white mb-2">Primary Interest</label>
+                <label className="block text-white mb-2">I am primarily a</label>
                 <select
-                  value={formData.interest}
-                  onChange={(e) => setFormData({...formData, interest: e.target.value})}
-                  className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500"
+                  value={formData.role}
+                  onChange={(e) => setFormData({...formData, role: e.target.value})}
+                  className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-defence-saffron"
                 >
-                  <option value="general">General Program Information</option>
-                  <option value="dgca">DGCA Certification</option>
-                  <option value="corporate">Corporate Training</option>
-                  <option value="student">Student Enrollment</option>
-                  <option value="military">Military/Defence</option>
+                  <option value="investor">Investor / VC</option>
+                  <option value="startup">Startup Founder</option>
+                  <option value="corporate">Corporate Executive</option>
+                  <option value="government">Government Official</option>
+                  <option value="researcher">Researcher / Academic</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
               
               <Button 
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600 text-white py-6 text-lg rounded-xl"
+                className="w-full bg-gradient-to-r from-defence-saffron to-orange-600 hover:from-orange-600 hover:to-defence-saffron text-white py-6 text-lg rounded-xl"
               >
-                <Plane className="w-5 h-5 mr-2" />
-                Request Program Details
+                <Rocket className="w-5 h-5 mr-2" />
+                Request Event Details
               </Button>
               
               <p className="text-center text-white/60 text-sm">
-                By submitting, you agree to receive program details and updates via WhatsApp/SMS.
+                By submitting, you agree to receive event updates and related communications.
               </p>
             </form>
           </div>
         </div> */}
 
         {/* Contact Banner */}
-        <div className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-blue-900/50 to-emerald-900/30 border border-blue-500/20">
+        <div className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-defence-navy/50 to-purple-900/30 border border-defence-saffron/20">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="text-2xl font-bold text-white mb-2">Need Immediate Assistance?</h3>
-              <p className="text-white/80">Our team is available 10 AM - 6 PM, Monday to Saturday</p>
+              <p className="text-white/80">Our DealRoom team is available to answer your questions</p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -392,37 +404,48 @@ export default function InvestNow() {
                 href="tel:+919638413900" 
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
               >
-                <Phone className="w-5 h-5 text-blue-400" />
+                <Phone className="w-5 h-5 text-defence-saffron" />
                 <div className="text-left">
                   <div className="text-white text-sm">Call Now</div>
                   <div className="text-white font-bold">+91 96384 13900</div>
                 </div>
               </a>
               
-              <a 
-                href="https://wa.me/919638413900" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-emerald-500/20 border border-emerald-500/30 hover:bg-emerald-500/30 transition-all"
+              <Button 
+                asChild
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-defence-saffron to-orange-600 text-white hover:from-orange-600 hover:to-defence-saffron"
               >
-                <MessageSquare className="w-5 h-5 text-emerald-400" />
-                <div className="text-left">
-                  <div className="text-white text-sm">WhatsApp</div>
-                  <div className="text-white font-bold">Direct Message</div>
-                </div>
-              </a>
+                <a 
+                  href="https://bit.ly/4i9MSEP" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <Rocket className="w-5 h-5" />
+                  Apply Now
+                </a>
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Floating Drone Animation */}
+      {/* Floating Elements Animation */}
       <div className="absolute top-1/4 right-10 animate-float">
-        <Target className="w-12 h-12 text-blue-400 opacity-30" />
+        <Rocket className="w-12 h-12 text-defence-saffron opacity-30" />
       </div>
       
       <div className="absolute bottom-1/4 left-10 animate-float" style={{ animationDelay: '2s' }}>
-        <Plane className="w-10 h-10 text-emerald-400 opacity-30" />
+        <TrendingUp className="w-10 h-10 text-blue-400 opacity-30" />
+      </div>
+
+      {/* Bharat 2.0 Banner */}
+      <div className="absolute bottom-10 right-10">
+        <div className="bg-gradient-to-r from-defence-saffron to-orange-600 px-6 py-3 rounded-full shadow-2xl">
+          <div className="flex items-center gap-2">
+            <Shield className="w-5 h-5 text-white" />
+            <span className="text-white font-bold">Bharat 2.0 Innovation Hub</span>
+          </div>
+        </div>
       </div>
 
       <style jsx global>{`

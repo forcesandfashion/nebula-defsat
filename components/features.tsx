@@ -39,7 +39,7 @@ export default function Features() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center space-y-4 mb-16">
           <p className="text-accent text-sm font-mono tracking-widest">CORE CAPABILITIES</p>
-          <h2 className="text-4xl md:text-5xl font-bold">Advanced Defense Technology</h2>
+          <h2 className="text-4xl md:text-5xl font-bold">Advanced Defence Technology</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Cutting-edge satellite systems designed for maximum security and reliability.
           </p>
