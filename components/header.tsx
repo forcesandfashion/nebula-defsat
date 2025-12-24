@@ -24,8 +24,8 @@ export default function Header() {
           <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition">
             Features
           </Link>
-          <Link href="#capabilities" className="text-sm text-muted-foreground hover:text-foreground transition">
-            Capabilities
+          <Link href="/invest-now" className="text-sm text-muted-foreground hover:text-foreground transition">
+            Invest Now
           </Link>
           <Link href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition">
             Contact
