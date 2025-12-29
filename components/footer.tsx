@@ -1,7 +1,7 @@
 "use client"
 
-import Link from "next/link"
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import Link from "next/link"     
+import { MapPin, Phone, Mail, Clock } from "lucide-react"  
 
 export default function Footer() {
   return (
@@ -28,9 +28,9 @@ export default function Footer() {
                   <p className="text-white font-medium mb-1">Headquarters</p>
                   <p className="text-gray-400 text-sm">
                     Nebula Def-SAT Private Limited <br/>
-Office No. A/907, Elite Magnum, <br/>
-806, Bhuyangdev Cross Road, Ahmedabad, Gujarat, <br />
-India- 380061
+                    Office No. A/907, Elite Magnum, <br/>
+                    806, Bhuyangdev Cross Road, Ahmedabad, Gujarat, <br />
+                    India- 380061
                   </p>
                 </div>
               </div>
@@ -158,7 +158,7 @@ India- 380061
             <h4 className="font-semibold text-white text-sm uppercase tracking-wider">Legal</h4>
             <ul className="space-y-2 text-sm text-gray-400">
               <li>
-                <Link href="/privacy" className="hover:text-defence-saffron transition duration-300">
+                <Link href="/privacy-policy" className="hover:text-defence-saffron transition duration-300">
                   Privacy Policy
                 </Link>
               </li>
@@ -238,6 +238,7 @@ India- 380061
               <Link href="/disclaimer" className="hover:text-white transition">
                 Disclaimer
               </Link>
+              
             </div>
           </div>
         </div>
