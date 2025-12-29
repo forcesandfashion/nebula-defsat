@@ -163,23 +163,23 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-defence-saffron transition duration-300">
-                  Terms of Service
+                <Link href="/terms-and-condition" className="hover:text-defence-saffron transition duration-300">
+                  Terms and Condition
                 </Link>
               </li>
               <li>
-                <Link href="/compliance" className="hover:text-defence-saffron transition duration-300">
-                  Compliance
+                <Link href="/refund" className="hover:text-defence-saffron transition duration-300">
+                  Refund and Cancelletion
                 </Link>
               </li>
               <li>
-                <Link href="/security" className="hover:text-defence-saffron transition duration-300">
-                  Security
+                <Link href="/contact-us" className="hover:text-defence-saffron transition duration-300">
+                  Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/sitemap" className="hover:text-defence-saffron transition duration-300">
-                  Sitemap
+                <Link href="/shipping" className="hover:text-defence-saffron transition duration-300">
+                  Shipping
                 </Link>
               </li>
             </ul>
