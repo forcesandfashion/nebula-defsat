@@ -198,7 +198,7 @@ export default function Footer() {
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center gap-6">
+          <section id="contact" className="flex flex-col sm:flex-row items-center gap-6">
             {/* Social Links */}
             <div className="flex gap-4">
               <Link 
@@ -229,18 +229,18 @@ export default function Footer() {
             
             {/* Quick Links */}
             <div className="flex gap-6 text-xs">
-              <Link href="/accessibility" className="hover:text-white transition">
+              <Link href="/privacy-policy" className="hover:text-white transition">
                 Accessibility
               </Link>
-              <Link href="/cookies" className="hover:text-white transition">
+              <Link href="privacy-policy" className="hover:text-white transition">
                 Cookies
               </Link>
-              <Link href="/disclaimer" className="hover:text-white transition">
+              <Link href="/privacy-policy" className="hover:text-white transition">
                 Disclaimer
               </Link>
               
             </div>
-          </div>
+          </section>
         </div>
 
         {/* Security Badge */}
