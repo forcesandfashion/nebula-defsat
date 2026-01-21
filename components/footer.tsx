@@ -53,10 +53,10 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="font-semibold text-white text-sm uppercase tracking-wider">Contact</h4>
             <ul className="space-y-3">
-              <li className="flex items-center gap-3">
+              {/* <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-defence-saffron" />
                 <span className="text-sm text-gray-300">+91 11 2568 9473</span>
-              </li>
+              </li> */}
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-defence-saffron" />
                 <span className="text-sm text-gray-300">+91 96384 13900</span>
