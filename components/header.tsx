@@ -16,7 +16,7 @@ export default function Header() {
             <span className="text-xs font-bold text-accent-foreground">◆</span>
           </div> */}
           {/* <span className="font-bold text-lg text-foreground hidden sm:inline">NebulaDefSat</span> */}
-          <Image src={"/nebuladefsat-logo4.png"} alt={"image not found"} height={50} width={50}/>
+          <Image src={"/nebuladefsat-logo5.png"} alt={"image not found"} height={50} width={50}/>
         </Link>
 
         {/* Navigation Links - Desktop */}

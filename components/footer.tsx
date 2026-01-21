@@ -63,11 +63,11 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-defence-saffron" />
-                <span className="text-sm text-gray-300">info@nebuladefsat.in</span>
+                <span className="text-sm text-gray-300">connect@nebuladefsat.com</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-defence-saffron" />
-                <span className="text-sm text-gray-300">support@nebuladefsat.in</span>
+                <span className="text-sm text-gray-300">hr@nebuladefsat.com</span>
               </li>
             </ul>
             
