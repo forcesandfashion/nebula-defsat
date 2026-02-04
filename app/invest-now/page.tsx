@@ -2,6 +2,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { 
   Target, 
   Users, 
@@ -18,7 +19,6 @@ import {
   Network,
   Globe,
   Shield,
-
 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -32,11 +32,32 @@ export default function InvestNow() {
     role: "investor"
   })
 
+  // copy-to-clipboard feedback state
+  const [copied, setCopied] = useState<string | null>(null)
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // Handle form submission
     console.log(formData)
   }
+
+  const handleCopy = async (value: string, label: string) => {
+    if (typeof navigator === "undefined" || !navigator.clipboard) return
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopied(label)
+      setTimeout(() => setCopied(null), 2000)
+    } catch (err) {
+      console.error("Copy failed", err)
+    }
+  }
+
+  // Bank/UPI details
+  const bankName = "NEBULA DEF-SAT PRIVATE LIMITED"
+  const accountNumber = "018905014878"
+  const ifsc = "ICIC0000189"
+  const upiId = "nebul13900.ibz@icici"
+  const upiIntent = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(bankName)}&cu=INR`
 
   const eventSteps = [
     {
@@ -114,117 +135,231 @@ export default function InvestNow() {
             🇮🇳 Defence, DeepTech, & SpaceTech ventures and investments collide.
           </p>
         </div>
-      {/* Certificates Section */}
-<div className="mt-16 grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
 
-  {/* Certificate 1 */}
-  <div className="relative group rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl shadow-2xl">
-    
-    <div className="p-4 border-b border-white/10 text-center">
-      <h3 className="text-white font-semibold tracking-wide">
-        Government Recognition Certificate
-      </h3>
-      <p className="text-white/60 text-sm">
-        Verified & Official Documentation
-      </p>
-    </div>
+        {/* Certificates Section */}
+        <div className="mt-16 grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Certificate 1 */}
+          <div className="relative group rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl shadow-2xl">
+            <div className="p-4 border-b border-white/10 text-center">
+              <h3 className="text-white font-semibold tracking-wide">
+                Government Recognition Certificate
+              </h3>
+              <p className="text-white/60 text-sm">
+                Verified & Official Documentation
+              </p>
+            </div>
 
-    {/* Scroll Wrapper */}
-    <div className="h-[420px] overflow-auto bg-white">
-      <iframe
-        src="/certificate-1.pdf"
-        className="w-full h-full"
-        loading="lazy"
-      />
-    </div>
+            {/* Scroll Wrapper */}
+            <div className="h-[420px] overflow-auto bg-white">
+              <iframe
+                src="/certificate-1.pdf"
+                className="w-full h-full"
+                loading="lazy"
+              />
+            </div>
+          </div>
 
-  </div>
+          {/* Certificate 2 */}
+          <div className="relative group rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl shadow-2xl">
+            <div className="p-4 border-b border-white/10 text-center">
+              <h3 className="text-white font-semibold tracking-wide">
+                Startup & Innovation Accreditation
+              </h3>
+              <p className="text-white/60 text-sm">
+                Recognised by Industry Authorities
+              </p>
+            </div>
 
-  {/* Certificate 2 */}
-  <div className="relative group rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl shadow-2xl">
-
-    <div className="p-4 border-b border-white/10 text-center">
-      <h3 className="text-white font-semibold tracking-wide">
-        Startup & Innovation Accreditation
-      </h3>
-      <p className="text-white/60 text-sm">
-        Recognised by Industry Authorities
-      </p>
-    </div>
-
-    {/* Scroll Wrapper */}
-    <div className="h-[420px] overflow-auto bg-white">
-      <iframe
-        src="/certificate-2.pdf"
-        className="w-full h-full"
-        loading="lazy"
-      />
-    </div>
-
-  </div>
-
-</div>
-
-
+            {/* Scroll Wrapper */}
+            <div className="h-[420px] overflow-auto bg-white">
+              <iframe
+                src="/certificate-2.pdf"
+                className="w-full h-full"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Crypto Investment Section */}
-<section className="mt-12 m-4 sm:mt-16">
-  <Card className="relative p-6 sm:p-10 rounded-3xl shadow-xl bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 border border-orange-200">
-    <div className="grid lg:grid-cols-2 gap-8 items-center">
-      
-      {/* Left Content */}
-      <div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-          Invest in Crypto with Confidence 🇮🇳
-        </h2>
-        <p className="text-gray-700 text-base sm:text-lg mb-6 leading-relaxed">
-          Looking beyond startups and equity? Start your crypto journey with 
-          <span className="font-semibold text-orange-600"> CoinDCX</span> — India’s most trusted crypto exchange.
-          Buy Bitcoin, Ethereum, and 500+ assets securely with INR.
-        </p>
-        {/* Powered By */}
-    <div className="absolute bottom-4 right-6 text-xs text-gray-500 flex items-center gap-1">
-      <span>Powered by</span>
-      <span className="font-semibold text-orange-600">CoinDCX</span>
-    </div>
+        <section className="mt-12 m-4 sm:mt-16">
+          <Card className="relative p-6 sm:p-10 rounded-3xl shadow-xl bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 border border-orange-200">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              {/* Left Content */}
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                  Invest in Crypto with Confidence 🇮🇳
+                </h2>
+                <p className="text-gray-700 text-base sm:text-lg mb-6 leading-relaxed">
+                  Looking beyond startups and equity? Start your crypto journey with 
+                  <span className="font-semibold text-orange-600"> CoinDCX</span> — India’s most trusted crypto exchange.
+                  Buy Bitcoin, Ethereum, and 500+ assets securely with INR.
+                </p>
 
-        <ul className="space-y-3 text-gray-700 text-base sm:text-lg">
-          <li>✅ Trusted by millions of Indian investors</li>
-          <li>✅ Easy INR deposits & withdrawals</li>
-          <li>✅ Advanced charts for serious traders</li>
-          <li>✅ Beginner-friendly & pro-ready</li>
-        </ul>
-      </div>
+                <ul className="space-y-3 text-gray-700 text-base sm:text-lg">
+                  <li>✅ Trusted by millions of Indian investors</li>
+                  <li>✅ Easy INR deposits & withdrawals</li>
+                  <li>✅ Advanced charts for serious traders</li>
+                  <li>✅ Beginner-friendly & pro-ready</li>
+                </ul>
+              </div>
 
-      {/* Right CTA Card */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 text-center">
-        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
-          Start Crypto Investing Today
-        </h3>
-        <p className="text-gray-600 mb-6 text-sm sm:text-base">
-          Sign up via our exclusive link and explore the future of finance.
-        </p>
+              {/* Right CTA Card */}
+              <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 text-center">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+                  Start Crypto Investing Today
+                </h3>
+                <p className="text-gray-600 mb-6 text-sm sm:text-base">
+                  Sign up via our exclusive link and explore the future of finance.
+                </p>
 
-        <Link
-          href="https://invite.coindcx.com/42552715"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Button className="w-sm bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 text-sm sm:text-base font-semibold rounded-xl shadow-md">
-            Join CoinDCX & Invest in Crypto
-          </Button>
-        </Link>
+                <Link
+                  href="https://invite.coindcx.com/42552715"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button className="w-sm bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 text-sm sm:text-base font-semibold rounded-xl shadow-md">
+                    Join CoinDCX & Invest in Crypto
+                  </Button>
+                </Link>
 
-        <p className="mt-4 text-xs text-gray-500">
-          Crypto investments are subject to market risks. Invest responsibly.
-        </p>
-      </div>
-    </div>
+                <p className="mt-4 text-xs text-gray-500">
+                  Crypto investments are subject to market risks. Invest responsibly.
+                </p>
+              </div>
+            </div>
 
-    
+            {/* Powered By */}
+            <div className="absolute bottom-4 right-6 text-xs text-gray-500 flex items-center gap-1">
+              <span>Powered by</span>
+              <span className="font-semibold text-orange-600">CoinDCX</span>
+            </div>
+          </Card>
+        </section>
 
-  </Card>
-</section>
+        {/* --- NEBULA Bank Details & QR (Premium Card) --- */}
+        <section className="mt-12 max-w-4xl mx-auto p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/3 border border-white/10 shadow-2xl backdrop-blur-md relative z-20 mb-4">
+          <div className="grid md:grid-cols-2 gap-6 items-center">
+            {/* Left: Details */}
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-defence-saffron to-orange-600 flex items-center justify-center shadow-md">
+                  <span className="text-white font-bold">ND</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">{bankName}</h3>
+                  <p className="text-sm text-white/70">Bank transfer / NEFT / IMPS / UPI</p>
+                </div>
+              </div>
+
+              <div className="mt-2 bg-white/5 p-4 rounded-xl border border-white/10">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <div className="text-xs text-white/70">A/C NO</div>
+                    <div className="font-mono text-white font-semibold">{accountNumber}</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleCopy(accountNumber, "account")}
+                      className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm"
+                    >
+                      Copy
+                    </button>
+                    {/* <a
+                      href={`/nebula-qr.jpg`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm"
+                    >
+                      View
+                    </a> */}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <div className="text-xs text-white/70">IFSC</div>
+                    <div className="font-mono text-white font-semibold">{ifsc}</div>
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => handleCopy(ifsc, "ifsc")}
+                      className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-xs text-white/70">UPI ID</div>
+                    <div className="font-mono text-white font-semibold">{upiId}</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={upiIntent}
+                      className="px-3 py-2 rounded-lg bg-defence-saffron text-white font-medium text-sm hover:opacity-95"
+                    >
+                      Pay via UPI
+                    </a>
+                    <button
+                      onClick={() => handleCopy(upiId, "upi")}
+                      className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+
+                {copied && (
+                  <div className="mt-3 text-xs text-green-400">
+                    ✅ {copied === "account" ? "Account number" : copied.toUpperCase()} copied
+                  </div>
+                )}
+              </div>
+
+              <p className="text-xs text-white/60 mt-2">
+                For UPI payments, tap <strong>Pay via UPI</strong> on mobile. Always verify the UPI ID before sending.
+              </p>
+            </div>
+
+            {/* Right: QR Card */}
+            <div className="flex flex-col items-center justify-center">
+              <div className="bg-white rounded-2xl p-4 shadow-xl border border-white/10">
+                {/* Next/Image for optimization */}
+                <Image
+                  src="/nebula-qr.jpeg"
+                  alt="Nebula UPI QR"
+                  width={520}
+                  height={520}
+                  className="w-64 h-64 object-contain rounded-lg"
+                />
+              </div>
+
+              <div className="mt-4 flex gap-3">
+                <a
+                  href="/nebula-qr.jpeg"
+                  download="nebula-qr.jpeg"
+                  className="px-4 py-2 rounded-lg bg-white/10 border border-white/10 text-white text-sm hover:bg-white/20"
+                >
+                  Download QR
+                </a>
+
+                <a
+                  href={upiIntent}
+                  className="px-4 py-2 rounded-lg bg-defence-saffron text-white font-medium text-sm hover:opacity-95"
+                >
+                  Open in UPI
+                </a>
+              </div>
+
+              <p className="mt-3 text-xs text-white/60 text-center max-w-xs">
+                Scan QR or use the UPI ID to pay. Payments received will be acknowledged by our team.
+              </p>
+            </div>
+          </div>
+        </section>
 
         <div className="grid lg:grid-cols-2 gap-12 mb-20">
           {/* Left Column - Event Overview */}
@@ -268,8 +403,6 @@ export default function InvestNow() {
                 ))}
               </div>
             </div>
-            
-             
 
             {/* Apply Now Section */}
             <div className="bg-gradient-to-br from-defence-navy/50 to-purple-900/30 rounded-2xl p-8 border border-defence-saffron/20">
@@ -426,86 +559,6 @@ export default function InvestNow() {
             </div>
           </div>
         </div>
-
-        {/* Registration Form */}
-        {/* <div className="max-w-3xl mx-auto">
-          <div className="bg-gradient-to-br from-defence-navy/30 to-purple-900/20 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-white mb-3">Express Your Interest</h2>
-              <p className="text-white/70">
-                Submit your details and our team will contact you with event details and participation information.
-              </p>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-white mb-2">Full Name</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-defence-saffron"
-                    placeholder="Enter your full name"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-white mb-2">Email Address</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-defence-saffron"
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-white mb-2">Phone Number</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-defence-saffron"
-                  placeholder="+91 98765 43210"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-white mb-2">I am primarily a</label>
-                <select
-                  value={formData.role}
-                  onChange={(e) => setFormData({...formData, role: e.target.value})}
-                  className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-defence-saffron"
-                >
-                  <option value="investor">Investor / VC</option>
-                  <option value="startup">Startup Founder</option>
-                  <option value="corporate">Corporate Executive</option>
-                  <option value="government">Government Official</option>
-                  <option value="researcher">Researcher / Academic</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              
-              <Button 
-                type="submit"
-                className="w-full bg-gradient-to-r from-defence-saffron to-orange-600 hover:from-orange-600 hover:to-defence-saffron text-white py-6 text-lg rounded-xl"
-              >
-                <Rocket className="w-5 h-5 mr-2" />
-                Request Event Details
-              </Button>
-              
-              <p className="text-center text-white/60 text-sm">
-                By submitting, you agree to receive event updates and related communications.
-              </p>
-            </form>
-          </div>
-        </div> */}
 
         {/* Contact Banner */}
         <div className="mt-16 p-8 rounded-2xl bg-gradient-to-r from-defence-navy/50 to-purple-900/30 border border-defence-saffron/20">
