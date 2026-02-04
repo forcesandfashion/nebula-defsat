@@ -114,6 +114,58 @@ export default function InvestNow() {
             🇮🇳 Defence, DeepTech, & SpaceTech ventures and investments collide.
           </p>
         </div>
+      {/* Certificates Section */}
+<div className="mt-16 grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+
+  {/* Certificate 1 */}
+  <div className="relative group rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl shadow-2xl">
+    
+    <div className="p-4 border-b border-white/10 text-center">
+      <h3 className="text-white font-semibold tracking-wide">
+        Government Recognition Certificate
+      </h3>
+      <p className="text-white/60 text-sm">
+        Verified & Official Documentation
+      </p>
+    </div>
+
+    {/* Scroll Wrapper */}
+    <div className="h-[420px] overflow-auto bg-white">
+      <iframe
+        src="/certificate-1.pdf"
+        className="w-full h-full"
+        loading="lazy"
+      />
+    </div>
+
+  </div>
+
+  {/* Certificate 2 */}
+  <div className="relative group rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl shadow-2xl">
+
+    <div className="p-4 border-b border-white/10 text-center">
+      <h3 className="text-white font-semibold tracking-wide">
+        Startup & Innovation Accreditation
+      </h3>
+      <p className="text-white/60 text-sm">
+        Recognised by Industry Authorities
+      </p>
+    </div>
+
+    {/* Scroll Wrapper */}
+    <div className="h-[420px] overflow-auto bg-white">
+      <iframe
+        src="/certificate-2.pdf"
+        className="w-full h-full"
+        loading="lazy"
+      />
+    </div>
+
+  </div>
+
+</div>
+
+
 
         {/* Crypto Investment Section */}
 <section className="mt-12 m-4 sm:mt-16">
