@@ -17,9 +17,12 @@ import {
   Handshake,
   Network,
   Globe,
-  Shield
+  Shield,
+
 } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 export default function InvestNow() {
   const [formData, setFormData] = useState({
@@ -112,6 +115,65 @@ export default function InvestNow() {
           </p>
         </div>
 
+        {/* Crypto Investment Section */}
+<section className="mt-12 m-4 sm:mt-16">
+  <Card className="relative p-6 sm:p-10 rounded-3xl shadow-xl bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 border border-orange-200">
+    <div className="grid lg:grid-cols-2 gap-8 items-center">
+      
+      {/* Left Content */}
+      <div>
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+          Invest in Crypto with Confidence 🇮🇳
+        </h2>
+        <p className="text-gray-700 text-base sm:text-lg mb-6 leading-relaxed">
+          Looking beyond startups and equity? Start your crypto journey with 
+          <span className="font-semibold text-orange-600"> CoinDCX</span> — India’s most trusted crypto exchange.
+          Buy Bitcoin, Ethereum, and 500+ assets securely with INR.
+        </p>
+        {/* Powered By */}
+    <div className="absolute bottom-4 right-6 text-xs text-gray-500 flex items-center gap-1">
+      <span>Powered by</span>
+      <span className="font-semibold text-orange-600">CoinDCX</span>
+    </div>
+
+        <ul className="space-y-3 text-gray-700 text-base sm:text-lg">
+          <li>✅ Trusted by millions of Indian investors</li>
+          <li>✅ Easy INR deposits & withdrawals</li>
+          <li>✅ Advanced charts for serious traders</li>
+          <li>✅ Beginner-friendly & pro-ready</li>
+        </ul>
+      </div>
+
+      {/* Right CTA Card */}
+      <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 text-center">
+        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+          Start Crypto Investing Today
+        </h3>
+        <p className="text-gray-600 mb-6 text-sm sm:text-base">
+          Sign up via our exclusive link and explore the future of finance.
+        </p>
+
+        <Link
+          href="https://invite.coindcx.com/42552715"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button className="w-sm bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 text-sm sm:text-base font-semibold rounded-xl shadow-md">
+            Join CoinDCX & Invest in Crypto
+          </Button>
+        </Link>
+
+        <p className="mt-4 text-xs text-gray-500">
+          Crypto investments are subject to market risks. Invest responsibly.
+        </p>
+      </div>
+    </div>
+
+    
+
+  </Card>
+</section>
+
         <div className="grid lg:grid-cols-2 gap-12 mb-20">
           {/* Left Column - Event Overview */}
           <div className="space-y-12">
@@ -154,6 +216,8 @@ export default function InvestNow() {
                 ))}
               </div>
             </div>
+            
+             
 
             {/* Apply Now Section */}
             <div className="bg-gradient-to-br from-defence-navy/50 to-purple-900/30 rounded-2xl p-8 border border-defence-saffron/20">
