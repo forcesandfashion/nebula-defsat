@@ -2,6 +2,7 @@
 
 import Link from "next/link"     
 import { MapPin, Phone, Mail, Clock } from "lucide-react"  
+import Image from "next/image"
 
 export default function Footer() {
   return (
@@ -205,30 +206,36 @@ export default function Footer() {
                 href="https://www.linkedin.com/events/7379490249753841664/" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
               >
-                <span className="text-white text-xs font-medium">Tw</span>
+                <span className="text-white text-xs font-medium"><Image src={"./twitter.png"} alt="Not Found" width={50} height={50}/></span>
               </Link>
               <Link 
                 href="https://www.linkedin.com/events/7379490249753841664/" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
               >
-                <span className="text-white text-xs font-medium">In</span>
+                <span className="text-white text-xs font-medium"><Image src={"./linkedin.png"} alt="Not Found" width={50} height={50}/></span>
               </Link>
               <Link 
                 href="https://www.linkedin.com/events/7379490249753841664/" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
               >
-                <span className="text-white text-xs font-medium">Fb</span>
+                <span className="text-white text-xs font-medium"><Image src={"./facebook.png"} alt="Not Found" width={50} height={50}/></span>
               </Link>
+              {/* <Link 
+                href="https://www.linkedin.com/events/7379490249753841664/" 
+                className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
+              >
+                <span className="text-white text-xs font-medium"><Image src={"./youtube.png"} alt="Not Found" width={50} height={50}/></span>
+              </Link> */}
               <Link 
                 href="https://www.linkedin.com/events/7379490249753841664/" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
               >
-                <span className="text-white text-xs font-medium">Yt</span>
+                <span className="text-white text-xs font-medium"><Image src={"./instagram.png"} alt="Not Found" width={50} height={50}/></span>
               </Link>
             </div>
             
             {/* Quick Links */}
-            <div className="flex gap-6 text-xs">
+            {/* <div className="flex gap-6 text-xs">
               <Link href="/privacy-policy" className="hover:text-white transition">
                 Accessibility
               </Link>
@@ -239,7 +246,7 @@ export default function Footer() {
                 Disclaimer
               </Link>
               
-            </div>
+            </div> */}
           </section>
         </div>
 
@@ -252,7 +259,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-defence-saffron rounded-full"></div>
-              <span>Ministry of Defence Approved</span>
+              <span>Approved By Ministry of Defence</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -260,7 +267,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-              <span>GDPR Compliant</span>
+              <span>Trusted By GDPR Compliant</span>
             </div>
           </div>
         </div>

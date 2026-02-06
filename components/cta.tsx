@@ -30,7 +30,7 @@ export default function CTA() {
               </div>
               
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="block bg-gradient-to-r from-defence-saffron via-white to-defence-green bg-clip-text text-transparent">
+                <span className="block text-white from-defence-saffron via-white to-defence-green bg-clip-text text-transparent">
                   Ready to Secure
                 </span>
                 <span className="block text-white mt-2">Your Critical Assets?</span>
