@@ -5,6 +5,7 @@ import Stats from "@/components/stats"
 import CTA from "@/components/cta"
 import Footer from "@/components/footer"
 import Draft from "@/components/draft"
+import MembershipTeaser from "@/components/membership/MembershipTeaser"
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Hero />
       <Features />
       <Stats />
+      <MembershipTeaser />
       <Draft />
       <CTA />
     </main>

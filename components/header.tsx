@@ -21,8 +21,8 @@ export default function Header() {
 
         {/* Navigation Links - Desktop */}
         <div className="hidden md:flex items-center gap-8">
-          <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition">
-            Features
+          <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition">
+            Home
           </Link>
           <Link href="/invest-now" className="text-sm text-muted-foreground hover:text-foreground transition">
             Invest Now
@@ -30,11 +30,16 @@ export default function Header() {
           <Link href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition">
             Contact
           </Link>
+          <Link href="/membership" className="text-sm text-muted-foreground hover:text-foreground transition">
+            Membership
+          </Link>
         </div>
 
         {/* CTA Button */}
         <button className="hidden md:flex bg-accent text-accent-foreground px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition">
+          <Link href="https://chat.whatsapp.com/HWjnppP8SxW6V2MyMElJCB">
           Get Started
+          </Link>
         </button>
 
         {/* Mobile Menu Button */}
