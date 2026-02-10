@@ -203,23 +203,23 @@ export default function Footer() {
             {/* Social Links */}
             <div className="flex gap-4">
               <Link 
-                href="https://www.linkedin.com/events/7379490249753841664/" 
+                href="https://x.com/Nebuladefsat" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
               >
                 <span className="text-white text-xs font-medium"><Image src={"./twitter.png"} alt="Not Found" width={50} height={50}/></span>
               </Link>
               <Link 
-                href="https://www.linkedin.com/events/7379490249753841664/" 
+                href="https://www.linkedin.com/company/nebuladefsat/" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
               >
                 <span className="text-white text-xs font-medium"><Image src={"./linkedin.png"} alt="Not Found" width={50} height={50}/></span>
               </Link>
-              <Link 
+              {/* <Link 
                 href="https://www.linkedin.com/events/7379490249753841664/" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
               >
                 <span className="text-white text-xs font-medium"><Image src={"./facebook.png"} alt="Not Found" width={50} height={50}/></span>
-              </Link>
+              </Link> */}
               {/* <Link 
                 href="https://www.linkedin.com/events/7379490249753841664/" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
@@ -227,7 +227,7 @@ export default function Footer() {
                 <span className="text-white text-xs font-medium"><Image src={"./youtube.png"} alt="Not Found" width={50} height={50}/></span>
               </Link> */}
               <Link 
-                href="https://www.linkedin.com/events/7379490249753841664/" 
+                href="https://www.instagram.com/nebuladefsat/" 
                 className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
               >
                 <span className="text-white text-xs font-medium"><Image src={"./instagram.png"} alt="Not Found" width={50} height={50}/></span>
