@@ -1,7 +1,7 @@
 "use client"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Check, Crown, Star, Zap, Target, Shield, Sparkles, TrendingUp, Users, Globe, Lock, Award, CreditCard, QrCode, Smartphone, Banknote, X } from 'lucide-react'
+import { Check, Crown, Star, Zap, Target, Shield, Sparkles, TrendingUp, Users, Globe, Lock, Award, CreditCard, QrCode, Smartphone, Banknote, X, Earth } from 'lucide-react'
 import { useState } from 'react'
 import Image from 'next/image'
 
@@ -63,15 +63,16 @@ const tiers = [
   }
 ]
 
-// UPI ID for payments
+// Payment details
 const UPI_ID = "nebul13900.ibz@icici"
 const BANK_ACCOUNT = "018905014878"
-// const PAYTM_NUMBER = "+44 20 7123 4567"
+const SWIFT_CODE = "ICICINBBXXX"
+const INTERNATIONAL_QR = "/international-qr.jpg" // Path to your international QR code
 
 export default function MembershipTiers() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'bank' | 'paytm' | 'card'>('upi')
+  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'bank' | 'paytm' | 'international-qr'>('upi')
 
   const handlePayNow = (tierName: string) => {
     setSelectedTier(tierName)
@@ -79,13 +80,8 @@ export default function MembershipTiers() {
   }
 
   const handleUPIPayment = () => {
-    // Create UPI payment link
     const upiLink = `upi://pay?pa=${UPI_ID}&pn=UK-India%20CEO%20Forum&mc=8654&tid=${Date.now()}&tr=UKINDCEO${Date.now()}&am=${getTierAmount(selectedTier || '')}&cu=INR&url=https://ukindiaforum.org`
-    
-    // Open UPI app
     window.open(upiLink, '_blank')
-    
-    // Close modal after a delay
     setTimeout(() => {
       setShowPaymentModal(false)
     }, 2000)
@@ -111,192 +107,263 @@ export default function MembershipTiers() {
     }
   }
 
-const PaymentModal = () => (
-  <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div
-      className="premium-card-gradient border border-blue-500/30 rounded-2xl max-w-md max-h-[90vh] w-full p-8 relative overflow-y-auto
-                 scrollbar-hide"
-      style={{
-        scrollbarWidth: 'none',       // Firefox
-        msOverflowStyle: 'none',       // IE / Edge
-      }}
-    >
-      <button
-        onClick={() => setShowPaymentModal(false)}
-        className="absolute top-4 right-4 text-blue-300 hover:text-white"
+  const PaymentModal = () => (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div
+        className="premium-card-gradient border border-blue-500/30 rounded-2xl max-w-md max-h-[90vh] w-full p-8 relative overflow-y-auto"
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+        }}
       >
-        <X className="h-5 w-5" />
-      </button>
-      
-      <div className="text-center mb-6">
-        <div className="p-3 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl w-fit mx-auto mb-4">
-          <CreditCard className="h-8 w-8 text-white" />
-        </div>
-        <h3 className="text-2xl font-bold text-white mb-2">
-          Complete Your Payment
-        </h3>
-        <p className="text-blue-300">
-          For {selectedTier} Membership
-        </p>
-        <div className="text-3xl font-bold text-white mt-4">
-          {getTierPrice(selectedTier || '')}
-        </div>
-      </div>
-
-      {/* Payment Methods */}
-      <div className="space-y-4 mb-6">
-        <div
-          className={`p-4 rounded-xl cursor-pointer transition-all ${
-            paymentMethod === 'upi'
-              ? 'bg-blue-500/20 border border-blue-500/50'
-              : 'bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/30'
-          }`}
-          onClick={() => setPaymentMethod('upi')}
+        <button
+          onClick={() => setShowPaymentModal(false)}
+          className="absolute top-4 right-4 text-blue-300 hover:text-white"
         >
-          <div className="flex items-center space-x-3">
-            <Smartphone className="h-5 w-5 text-blue-400" />
-            <div className="flex-1">
-              <div className="text-white font-semibold">UPI Payment</div>
-              <div className="text-blue-300 text-sm">Instant payment via UPI apps</div>
-            </div>
-            {paymentMethod === 'upi' && (
-              <div className="h-3 w-3 rounded-full bg-blue-500" />
-            )}
+          <X className="h-5 w-5" />
+        </button>
+        
+        <div className="text-center mb-6">
+          <div className="p-3 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl w-fit mx-auto mb-4">
+            <CreditCard className="h-8 w-8 text-white" />
+          </div>
+          <h3 className="text-2xl font-bold text-white mb-2">
+            Complete Your Payment
+          </h3>
+          <p className="text-blue-300">
+            For {selectedTier} Membership
+          </p>
+          <div className="text-3xl font-bold text-white mt-4">
+            {getTierPrice(selectedTier || '')}
           </div>
         </div>
 
-        <div
-          className={`p-4 rounded-xl cursor-pointer transition-all ${
-            paymentMethod === 'bank'
-              ? 'bg-blue-500/20 border border-blue-500/50'
-              : 'bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/30'
-          }`}
-          onClick={() => setPaymentMethod('bank')}
-        >
-          <div className="flex items-center space-x-3">
-            <Banknote className="h-5 w-5 text-blue-400" />
-            <div className="flex-1">
-              <div className="text-white font-semibold">Bank Transfer</div>
-              <div className="text-blue-300 text-sm">International wire transfer</div>
+        {/* Payment Methods */}
+        <div className="space-y-4 mb-6">
+          <div
+            className={`p-4 rounded-xl cursor-pointer transition-all ${
+              paymentMethod === 'upi'
+                ? 'bg-blue-500/20 border border-blue-500/50'
+                : 'bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/30'
+            }`}
+            onClick={() => setPaymentMethod('upi')}
+          >
+            <div className="flex items-center space-x-3">
+              <Smartphone className="h-5 w-5 text-blue-400" />
+              <div className="flex-1">
+                <div className="text-white font-semibold">UPI Payment</div>
+                <div className="text-blue-300 text-sm">Instant payment via UPI apps</div>
+              </div>
+              {paymentMethod === 'upi' && (
+                <div className="h-3 w-3 rounded-full bg-blue-500" />
+              )}
             </div>
-            {paymentMethod === 'bank' && (
-              <div className="h-3 w-3 rounded-full bg-blue-500" />
-            )}
+          </div>
+
+          <div
+            className={`p-4 rounded-xl cursor-pointer transition-all ${
+              paymentMethod === 'bank'
+                ? 'bg-blue-500/20 border border-blue-500/50'
+                : 'bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/30'
+            }`}
+            onClick={() => setPaymentMethod('bank')}
+          >
+            <div className="flex items-center space-x-3">
+              <Banknote className="h-5 w-5 text-blue-400" />
+              <div className="flex-1">
+                <div className="text-white font-semibold">Bank Transfer</div>
+                <div className="text-blue-300 text-sm">International wire transfer</div>
+              </div>
+              {paymentMethod === 'bank' && (
+                <div className="h-3 w-3 rounded-full bg-blue-500" />
+              )}
+            </div>
+          </div>
+
+          <div
+            className={`p-4 rounded-xl cursor-pointer transition-all ${
+              paymentMethod === 'paytm'
+                ? 'bg-blue-500/20 border border-blue-500/50'
+                : 'bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/30'
+            }`}
+            onClick={() => setPaymentMethod('paytm')}
+          >
+            <div className="flex items-center space-x-3">
+              <QrCode className="h-5 w-5 text-blue-400" />
+              <div className="flex-1">
+                <div className="text-white font-semibold">Indian UPI QR</div>
+                <div className="text-blue-300 text-sm">Scan for Indian payments</div>
+              </div>
+              {paymentMethod === 'paytm' && (
+                <div className="h-3 w-3 rounded-full bg-blue-500" />
+              )}
+            </div>
+          </div>
+
+          <div
+            className={`p-4 rounded-xl cursor-pointer transition-all ${
+              paymentMethod === 'international-qr'
+                ? 'bg-blue-500/20 border border-blue-500/50'
+                : 'bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/30'
+            }`}
+            onClick={() => setPaymentMethod('international-qr')}
+          >
+            <div className="flex items-center space-x-3">
+              <Earth className="h-5 w-5 text-blue-400" />
+              <div className="flex-1">
+                <div className="text-white font-semibold">International QR</div>
+                <div className="text-blue-300 text-sm">Scan for international payments</div>
+              </div>
+              {paymentMethod === 'international-qr' && (
+                <div className="h-3 w-3 rounded-full bg-blue-500" />
+              )}
+            </div>
           </div>
         </div>
 
-        <div
-          className={`p-4 rounded-xl cursor-pointer transition-all ${
-            paymentMethod === 'paytm'
-              ? 'bg-blue-500/20 border border-blue-500/50'
-              : 'bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/30'
-          }`}
-          onClick={() => setPaymentMethod('paytm')}
-        >
-          <div className="flex items-center space-x-3">
-            <QrCode className="h-5 w-5 text-blue-400" />
-            <div className="flex-1">
-              <div className="text-white font-semibold">PayTM / QR Code</div>
-              <div className="text-blue-300 text-sm">Scan QR code to pay</div>
-            </div>
-            {paymentMethod === 'paytm' && (
-              <div className="h-3 w-3 rounded-full bg-blue-500" />
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Payment Details */}
-      {paymentMethod === 'upi' && (
-        <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-          <div className="text-center">
-            <div className="text-blue-300 text-sm mb-2">UPI ID</div>
-            <div className="text-white font-mono text-lg break-all bg-black/30 p-3 rounded-lg">
-              {UPI_ID}
-            </div>
-            <p className="text-blue-300 text-sm mt-3">
-              Click Pay Now to open your UPI app
-            </p>
-          </div>
-        </div>
-      )}
-
-      {paymentMethod === 'bank' && (
-        <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-          <div className="space-y-3">
-            <div>
-              <div className="text-blue-300 text-sm">Account Number</div>
-              <div className="text-white font-mono">{BANK_ACCOUNT}</div>
-            </div>
-            <div>
-              <div className="text-blue-300 text-sm">Bank Name</div>
-              <div className="text-white">ICICI Bank</div>
-            </div>
-            <div>
-              <div className="text-blue-300 text-sm">IFSC Code</div>
-              <div className="text-white"> ICIC0000189</div>
+        {/* Payment Details */}
+        {paymentMethod === 'upi' && (
+          <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+            <div className="text-center">
+              <div className="text-blue-300 text-sm mb-2">UPI ID</div>
+              <div className="text-white font-mono text-lg break-all bg-black/30 p-3 rounded-lg">
+                {UPI_ID}
+              </div>
+              <p className="text-blue-300 text-sm mt-3">
+                Click Pay Now to open your UPI app
+              </p>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {paymentMethod === 'paytm' && (
-        <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-          <div className="text-center">
-            <div className="mt-4 p-4 bg-white rounded-lg inline-block">
-              <div className="text-center text-black">
-                <div className="text-4xl mb-2">
-                    <Image
-                                  src="/nebula-qr.jpeg"
-                                  alt="Nebula UPI QR"
-                                  width={520}
-                                  height={520}
-                                  className="w-64 h-64 object-contain rounded-lg"
-                                /></div>
-                <div className="text-sm">PayTM QR Code</div>
-                <div className="text-xs opacity-70">Scan to pay</div>
+        {paymentMethod === 'bank' && (
+          <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+            <div className="space-y-3">
+              <div>
+                <div className="text-blue-300 text-sm">Account Number</div>
+                <div className="text-white font-mono">{BANK_ACCOUNT}</div>
+              </div>
+              <div>
+                <div className="text-blue-300 text-sm">Bank Name</div>
+                <div className="text-white">ICICI Bank</div>
+              </div>
+              <div>
+                <div className="text-blue-300 text-sm">IFSC Code</div>
+                <div className="text-white">ICIC0000189</div>
+              </div>
+              <div>
+                <div className="text-blue-300 text-sm">SWIFT Code</div>
+                <div className="text-white">{SWIFT_CODE}</div>
+              </div>
+              <div>
+                <div className="text-blue-300 text-sm">Beneficiary Name</div>
+                <div className="text-white">UK-India CEO Forum</div>
               </div>
             </div>
           </div>
+        )}
+
+        {paymentMethod === 'paytm' && (
+          <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="text-blue-300 text-sm mb-2">Indian UPI QR Code</div>
+                <p className="text-blue-300 text-sm mb-4">Scan using any Indian payment app (PayTM, PhonePe, Google Pay, etc.)</p>
+              </div>
+              <div className="mt-4 p-4 bg-white rounded-lg inline-block">
+                <div className="text-center text-black">
+                  <Image
+                    src="/nebula-qr.jpeg"
+                    alt="Indian UPI QR"
+                    width={520}
+                    height={520}
+                    className="w-64 h-64 object-contain rounded-lg"
+                  />
+                  <div className="text-sm font-semibold mt-2">Indian UPI QR Code</div>
+                  <div className="text-xs opacity-70">Scan for INR payments</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {paymentMethod === 'international-qr' && (
+          <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="text-blue-300 text-sm mb-2">International QR Code</div>
+                <p className="text-blue-300 text-sm mb-4">Scan using international payment apps for GBP/USD payments</p>
+              </div>
+              <div className="mt-4 p-4 bg-white rounded-lg inline-block">
+                <div className="text-center text-black">
+                  <Image
+                    src={"/wise-qr-code.jpeg"}
+                    alt="International Payment QR"
+                    width={520}
+                    height={520}
+                    className="w-64 h-64 object-contain rounded-lg"
+                  />
+                  {/* <div className="text-sm font-semibold mt-2">International Payment QR</div>
+                  <div className="text-xs opacity-70">Scan for GBP/USD payments</div> */}
+                </div>
+              </div>
+              <div className="mt-6 text-center">
+                {/* <div className="text-blue-300 text-sm mb-2">Alternative International Payment Methods</div> */}
+                <div className="space-y-2 text-sm">
+                  {/* <div className="flex justify-between">
+                    <span className="text-blue-300">PayPal:</span>
+                    <span className="text-white">payments@ukindiaforum.org</span>
+                  </div> */}
+                  {/* <div className="flex justify-between">
+                    <span className="text-blue-300">Wise:</span>
+                    <span className="text-white">ukindia-forum</span>
+                  </div> */}
+                  {/* <div className="flex justify-between">
+                    <span className="text-blue-300">SWIFT:</span>
+                    <span className="text-white">{SWIFT_CODE}</span>
+                  </div> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="flex space-x-4">
+          <Button
+            className="flex-1 premium-blue-gradient text-white"
+            onClick={() => {
+              if (paymentMethod === 'upi') {
+                handleUPIPayment()
+              } else {
+                alert(`Please complete payment using the provided ${paymentMethod} details.`)
+                setShowPaymentModal(false)
+              }
+            }}
+          >
+            {paymentMethod === 'upi' ? 'Open UPI App' : 'Proceed to Payment'}
+          </Button>
         </div>
-      )}
 
-      <div className="flex space-x-4">
-        <Button
-          className="flex-1 premium-blue-gradient text-white"
-          onClick={() => {
-            if (paymentMethod === 'upi') {
-              handleUPIPayment()
-            } else {
-              alert(`Please complete payment using the provided ${paymentMethod} details.`)
-              setShowPaymentModal(false)
-            }
-          }}
-        >
-          {paymentMethod === 'upi' ? 'Open UPI App' : 'Proceed to Payment'}
-        </Button>
+        {/* <div className="mt-6 text-center">
+          <p className="text-blue-300 text-xs">
+            After payment, please email the receipt to payments@ukindiaforum.org
+          </p>
+        </div> */}
       </div>
-
-      
     </div>
-  </div>
-)
-
+  )
 
   return (
     <>
       <section id="tiers" className="py-32 relative overflow-hidden">
-        {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
           <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/10 to-transparent" />
           <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
           
-          {/* Floating Elements */}
           <div className="absolute top-20 left-10 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-48 h-48 bg-blue-600/5 rounded-full blur-3xl" />
           
-          {/* Grid Pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="h-full w-full" style={{
               backgroundImage: `linear-gradient(to right, #3b82f6 1px, transparent 1px),
@@ -307,7 +374,6 @@ const PaymentModal = () => (
         </div>
 
         <div className="container relative z-10 mx-auto px-4">
-          {/* Section Header */}
           <div className="text-center mb-20">
             <div className="inline-flex items-center space-x-4 mb-6">
               <div className="h-px w-12 bg-gradient-to-r from-transparent to-blue-500" />
@@ -337,9 +403,7 @@ const PaymentModal = () => (
             </p>
           </div>
 
-          {/* Membership Cards - Creative Layout */}
           <div className="relative">
-            {/* Connecting Lines */}
             <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-blue-500/20 via-blue-500/10 to-blue-500/20" />
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -352,13 +416,11 @@ const PaymentModal = () => (
                     transition-all duration-500
                   `}
                 >
-                  {/* Decorative Corner Elements */}
                   <div className={`absolute top-0 left-0 w-4 h-4 border-t border-l ${tier.borderColor}`} />
                   <div className={`absolute top-0 right-0 w-4 h-4 border-t border-r ${tier.borderColor}`} />
                   <div className={`absolute bottom-0 left-0 w-4 h-4 border-b border-l ${tier.borderColor}`} />
                   <div className={`absolute bottom-0 right-0 w-4 h-4 border-b border-r ${tier.borderColor}`} />
 
-                  {/* Highlighted Badge */}
                   {tier.highlighted && (
                     <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-20">
                       <div className="premium-blue-gradient text-white px-8 py-3 rounded-full font-bold text-sm flex items-center shadow-lg shadow-blue-500/30">
@@ -369,7 +431,6 @@ const PaymentModal = () => (
                     </div>
                   )}
 
-                  {/* Card Glow Effect */}
                   <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
                     tier.highlighted ? 'bg-gradient-to-r from-blue-500/10 via-blue-400/10 to-blue-500/10' : 'bg-gradient-to-r from-blue-500/5 via-blue-400/5 to-blue-500/5'
                   } blur-xl`} />
@@ -387,13 +448,11 @@ const PaymentModal = () => (
                       overflow-hidden
                     `}
                   >
-                    {/* Animated Background Pattern */}
                     <div className="absolute inset-0 opacity-5">
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.3)_0%,transparent_50%)]" />
                     </div>
 
                     <CardHeader className="pt-12 pb-8 relative">
-                      {/* Tier Icon with Glow */}
                       <div className={`
                         relative mb-8
                         ${tier.highlighted ? 'scale-110' : ''}
@@ -416,17 +475,14 @@ const PaymentModal = () => (
                         </div>
                       </div>
 
-                      {/* Tier Name */}
                       <CardTitle className="text-3xl font-bold text-center mb-2">
                         <span className="text-white">{tier.name}</span>
                       </CardTitle>
                       
-                      {/* Tagline */}
                       <p className="text-blue-300 text-center font-medium">
                         {tier.tagline}
                       </p>
 
-                      {/* Price */}
                       <div className="text-center mt-8">
                         <div className="text-4xl font-bold text-white mb-2">
                           {tier.priceGBP}
@@ -438,7 +494,6 @@ const PaymentModal = () => (
                     </CardHeader>
 
                     <CardContent className="pb-8">
-                      {/* Features List */}
                       <div className="space-y-4 mb-8">
                         {tier.features.map((feature, idx) => (
                           <div 
@@ -465,7 +520,6 @@ const PaymentModal = () => (
                         ))}
                       </div>
 
-                      {/* Pay Now Button */}
                       <Button 
                         className={`
                           w-full py-6 rounded-xl font-bold text-lg
@@ -479,7 +533,6 @@ const PaymentModal = () => (
                         `}
                         onClick={() => handlePayNow(tier.name)}
                       >
-                        {/* Button Glow */}
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         
                         <span className="relative z-10 flex items-center justify-center">
@@ -498,7 +551,6 @@ const PaymentModal = () => (
                         </span>
                       </Button>
 
-                      {/* Additional Info */}
                       {tier.highlighted && (
                         <div className="mt-6 text-center">
                           <p className="text-blue-300 text-sm flex items-center justify-center">
@@ -514,15 +566,12 @@ const PaymentModal = () => (
             </div>
           </div>
 
-          {/* Startup/Student Tier */}
           <div className="mt-20 max-w-4xl mx-auto">
             <div className="relative group">
-              {/* Background Glow */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-green-500/5 to-blue-500/5 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <Card className="relative  border border-blue-500/30 overflow-hidden">
-                {/* Animated Border */}
-                <div className="absolute inset-0 rounded-3xl p-[1px] " />
+              <Card className="relative border border-blue-500/30 overflow-hidden">
+                <div className="absolute inset-0 rounded-3xl p-[1px]" />
                 
                 <CardContent className="p-10">
                   <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
@@ -542,7 +591,6 @@ const PaymentModal = () => (
                         </div>
                       </div>
 
-                      {/* Benefits */}
                       <div className="grid grid-cols-2 gap-4 mt-6">
                         {['Fast-track approval', 'Mentorship access', 'Student discounts', 'Startup grants'].map((benefit) => (
                           <div key={benefit} className="flex items-center space-x-2">
@@ -562,15 +610,6 @@ const PaymentModal = () => (
                           3,000 INR
                         </div>
                       </div>
-                      {/* <Button 
-                        className=" border border-green-500/50 bg-green-500/10 text-green-300 hover:bg-green-500/20 hover:text-white px-8 py-4 font-semibold"
-                        onClick={() => {
-                        //   setSelectedTier('Startup & Student')
-                          setShowPaymentModal(true)
-                        }}
-                      >
-                        Pay Now - Special Rate
-                      </Button> */}
                       <p className="text-blue-400 text-sm mt-4">
                         Limited spots available each quarter
                       </p>
@@ -581,8 +620,7 @@ const PaymentModal = () => (
             </div>
           </div>
 
-          {/* Payment Methods Info */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card className="premium-card-gradient border border-blue-500/20">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-4">
@@ -602,7 +640,7 @@ const PaymentModal = () => (
                   <h4 className="text-lg font-semibold text-white">Bank Transfer</h4>
                 </div>
                 <p className="text-blue-300 text-sm">
-                  International wire transfer to NDS Bank account
+                  International wire transfer to ICICI Bank account
                 </p>
               </CardContent>
             </Card>
@@ -611,17 +649,28 @@ const PaymentModal = () => (
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-4">
                   <QrCode className="h-5 w-5 text-blue-400" />
-                  <h4 className="text-lg font-semibold text-white">QR Code</h4>
+                  <h4 className="text-lg font-semibold text-white">Indian QR</h4>
                 </div>
                 <p className="text-blue-300 text-sm">
-                  Scan QR code using any payment app
+                  Scan Indian UPI QR code for INR payments
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="premium-card-gradient border border-blue-500/20">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <Earth className="h-5 w-5 text-blue-400" />
+                  <h4 className="text-lg font-semibold text-white">International QR</h4>
+                </div>
+                <p className="text-blue-300 text-sm">
+                  Scan international QR for GBP/USD payments
                 </p>
               </CardContent>
             </Card>
           </div>
         </div>
 
-        {/* Custom Styles for Animation */}
         <style jsx global>{`
           @keyframes gradient-x {
             0%, 100% {
@@ -638,7 +687,6 @@ const PaymentModal = () => (
         `}</style>
       </section>
 
-      {/* Payment Modal */}
       {showPaymentModal && <PaymentModal />}
     </>
   )
