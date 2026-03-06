@@ -127,7 +127,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="hover:text-defence-saffron transition duration-300">
+                <Link href="/career" className="hover:text-defence-saffron transition duration-300">
                   Careers
                 </Link>
               </li>
