@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import Script from "next/script"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -43,6 +44,21 @@ export default function RootLayout({
       <body className={`font-sans antialiased bg-background text-foreground`}>
         <Header />
         {children}
+         <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-4VT2SPRDJ7"
+          strategy="afterInteractive"
+        />
+
+        {/* Initialize GA */}
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', 'G-4VT2SPRDJ7');
+          `}
+        </Script>
         <Analytics />
         <Footer />
       
