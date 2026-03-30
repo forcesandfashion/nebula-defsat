@@ -11,7 +11,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "NebulaDefSat - Advanced Satellite Defense Solutions",
+  title: "NebulaDefSat - Advanced Satellite Defense Solution",
   description:
     "Next-generation satellite defense and threat monitoring systems. Cutting-edge technology for national security.",
   generator: "v0.app",
