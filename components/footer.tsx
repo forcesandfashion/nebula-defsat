@@ -1,277 +1,175 @@
 "use client"
 
-import Link from "next/link"     
-import { MapPin, Phone, Mail, Clock } from "lucide-react"  
+import Link from "next/link"
+import { MapPin, Phone, Mail, Clock } from "lucide-react"
 import Image from "next/image"
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border py-12 px-4 md:px-8 bg-gradient-to-t from-gray-900 to-black">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-          {/* Brand & Address */}
-          <div className="space-y-4 lg:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-defence-saffron to-orange-600 rounded-lg flex items-center justify-center">
-                <span className="text-xs font-bold text-white">◆</span>
+    <footer className="relative bg-black text-white overflow-hidden">
+
+      {/* Glow Background */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-orange-900/20 via-transparent to-blue-900/20 blur-3xl"></div>
+
+      <div className="relative max-w-7xl mx-auto px-6 py-16">
+
+        {/* GRID */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
+
+          {/* BRAND */}
+          <div className="lg:col-span-2 space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                ◆
               </div>
-              <span className="font-bold text-white">NebulaDefSat Pvt. Ltd.</span>
+              <span className="text-xl font-bold tracking-wide">
+                NebulaDefSat Pvt. Ltd.
+              </span>
             </div>
-            <p className="text-sm text-gray-300 mb-6">
+
+            <p className="text-gray-300 text-sm leading-relaxed">
               Advancing global security through cutting-edge satellite and defence technology.
             </p>
-            
-            {/* Address Section */}
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-defence-saffron flex-shrink-0 mt-0.5" />
+
+            {/* ADDRESS CARD */}
+            <div className="p-4 rounded-xl bg-white/5 backdrop-blur border border-white/10 hover:border-orange-500/40 transition">
+              <div className="flex gap-3">
+                <MapPin className="text-orange-400 mt-1" size={18} />
                 <div>
-                  <p className="text-white font-medium mb-1">Headquarters</p>
-                  <p className="text-gray-400 text-sm">
-                    Nebula Def-SAT Private Limited <br/>
-                    Office No. A/907, Elite Magnum, <br/>
-                    806, Bhuyangdev Cross Road, Ahmedabad, Gujarat, <br />
-                    India- 380061
+                  <p className="font-semibold text-white mb-1">Headquarters</p>
+                  <p className="text-sm text-gray-400">
+                    Nebula Def-SAT Pvt Ltd <br />
+                    Ahmedabad, Gujarat, India
                   </p>
                 </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                {/* <MapPin className="w-5 h-5 text-defence-saffron flex-shrink-0 mt-0.5" /> */}
-                {/* <div>
-                  <p className="text-white font-medium mb-1">R&D Center</p>
-                  <p className="text-gray-400 text-sm">
-                    Tech Park Building,<br />
-                    Outer Ring Road,<br />
-                    Bengaluru - 560037, India
-                  </p>
-                </div> */}
               </div>
             </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-white text-sm uppercase tracking-wider">Contact</h4>
-            <ul className="space-y-3">
-              {/* <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-defence-saffron" />
-                <span className="text-sm text-gray-300">+91 11 2568 9473</span>
-              </li> */}
-              <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-defence-saffron" />
-                <span className="text-sm text-gray-300">+91 96384 13900</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-defence-saffron" />
-                <span className="text-sm text-gray-300">connect@nebuladefsat.com</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-defence-saffron" />
-                <span className="text-sm text-gray-300">hr@nebuladefsat.com</span>
-              </li>
-            </ul>
-            
-            <div className="pt-4">
-              <div className="flex items-center gap-3 mb-2">
-                <Clock className="w-4 h-4 text-defence-saffron" />
-                <h5 className="font-medium text-white text-sm">Business Hours</h5>
+          {/* CONTACT */}
+          <div>
+            <h4 className="footer-title">Contact</h4>
+
+            <div className="space-y-3 mt-4 text-sm">
+              <div className="footer-item">
+                <Phone size={16} />
+                +91 96384 13900
               </div>
-              <p className="text-gray-400 text-sm">
-                Mon - Fri: 9:00 AM - 6:00 PM<br />
-                Sat: 10:00 AM - 2:00 PM<br />
-                Sunday & Holidays: Closed
+
+              <div className="footer-item">
+                <Mail size={16} />
+                connect@nebuladefsat.com
+              </div>
+
+              <div className="footer-item">
+                <Mail size={16} />
+                hr@nebuladefsat.com
+              </div>
+            </div>
+
+            {/* HOURS */}
+            <div className="mt-6 text-sm">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock size={16} className="text-orange-400" />
+                <span className="font-medium">Business Hours</span>
+              </div>
+              <p className="text-gray-400">
+                Mon - Fri: 9AM - 6PM <br />
+                Sat: 10AM - 2PM
               </p>
             </div>
           </div>
 
-          {/* Product */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-white text-sm uppercase tracking-wider">Product</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>
-                <Link href="#" className="hover:text-defence-saffron transition duration-300">
-                  Satellite Systems
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-defence-saffron transition duration-300">
-                  Defence Solutions
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-defence-saffron transition duration-300">
-                  Surveillance Tech
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-defence-saffron transition duration-300">
-                  Drone Technology
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-defence-saffron transition duration-300">
-                  Security Protocols
-                </Link>
-              </li>
+          {/* PRODUCT */}
+          <div>
+            <h4 className="footer-title">Product</h4>
+            <ul className="footer-links">
+              <li><Link href="#">Satellite Systems</Link></li>
+              <li><Link href="#">Defence Solutions</Link></li>
+              <li><Link href="#">Drone Tech</Link></li>
+              <li><Link href="#">Surveillance</Link></li>
             </ul>
           </div>
 
-          {/* Company */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-white text-sm uppercase tracking-wider">Company</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>
-                <Link href="/about" className="hover:text-defence-saffron transition duration-300">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/career" className="hover:text-defence-saffron transition duration-300">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="hover:text-defence-saffron transition duration-300">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="/news" className="hover:text-defence-saffron transition duration-300">
-                  News
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-defence-saffron transition duration-300">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/invest" className="hover:text-defence-saffron transition duration-300">
-                  Invest Now
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-white text-sm uppercase tracking-wider">Legal</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>
-                <Link href="/privacy-policy" className="hover:text-defence-saffron transition duration-300">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms-and-condition" className="hover:text-defence-saffron transition duration-300">
-                  Terms and Condition
-                </Link>
-              </li>
-              <li>
-                <Link href="/refund" className="hover:text-defence-saffron transition duration-300">
-                  Refund and Cancelletion
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact-us" className="hover:text-defence-saffron transition duration-300">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/shipping" className="hover:text-defence-saffron transition duration-300">
-                  Shipping
-                </Link>
-              </li>
+          {/* COMPANY */}
+          <div>
+            <h4 className="footer-title">Company</h4>
+            <ul className="footer-links">
+              <li><Link href="/about">About</Link></li>
+              <li><Link href="/career">Careers</Link></li>
+              <li><Link href="/blog">Blog</Link></li>
+              <li><Link href="/invest">Invest</Link></li>
             </ul>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-800 my-8"></div>
+        {/* DIVIDER */}
+        <div className="border-t border-white/10 py-6 flex flex-col md:flex-row justify-between items-center gap-6">
 
-        {/* Bottom Section */}
-        <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <div className="space-y-2 mb-4 md:mb-0">
-            <p>&copy; 2025 NebulaDefSat Pvt. Ltd. All rights reserved.</p>
-            <p className="text-xs">
-              Registered under the Companies Act, 2013 • GSTIN: 07AABCN1234M1Z5
-            </p>
+          <p className="text-gray-400 text-sm">
+            © 2025 NebulaDefSat. All rights reserved.
+          </p>
+
+          {/* SOCIAL */}
+          <div className="flex gap-4">
+            {["twitter", "linkedin", "instagram"].map((icon) => (
+              <Link
+                key={icon}
+                href="#"
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 hover:bg-orange-500 transition shadow-md hover:scale-110"
+              >
+                <Image src={`/${icon}.png`} alt={icon} width={18} height={18} />
+              </Link>
+            ))}
           </div>
-          
-          <section id="contact" className="flex flex-col sm:flex-row items-center gap-6">
-            {/* Social Links */}
-            <div className="flex gap-4">
-              <Link 
-                href="https://x.com/Nebuladefsat" 
-                className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
-              >
-                <span className="text-white text-xs font-medium"><Image src={"./twitter.png"} alt="Not Found" width={50} height={50}/></span>
-              </Link>
-              <Link 
-                href="https://www.linkedin.com/company/nebuladefsat/" 
-                className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
-              >
-                <span className="text-white text-xs font-medium"><Image src={"./linkedin.png"} alt="Not Found" width={50} height={50}/></span>
-              </Link>
-              {/* <Link 
-                href="https://www.linkedin.com/events/7379490249753841664/" 
-                className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
-              >
-                <span className="text-white text-xs font-medium"><Image src={"./facebook.png"} alt="Not Found" width={50} height={50}/></span>
-              </Link> */}
-              {/* <Link 
-                href="https://www.linkedin.com/events/7379490249753841664/" 
-                className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
-              >
-                <span className="text-white text-xs font-medium"><Image src={"./youtube.png"} alt="Not Found" width={50} height={50}/></span>
-              </Link> */}
-              <Link 
-                href="https://www.instagram.com/nebuladefsat/" 
-                className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-defence-saffron transition duration-300"
-              >
-                <span className="text-white text-xs font-medium"><Image src={"./instagram.png"} alt="Not Found" width={50} height={50}/></span>
-              </Link>
-            </div>
-            
-            {/* Quick Links */}
-            {/* <div className="flex gap-6 text-xs">
-              <Link href="/privacy-policy" className="hover:text-white transition">
-                Accessibility
-              </Link>
-              <Link href="privacy-policy" className="hover:text-white transition">
-                Cookies
-              </Link>
-              <Link href="/privacy-policy" className="hover:text-white transition">
-                Disclaimer
-              </Link>
-              
-            </div> */}
-          </section>
         </div>
 
-        {/* Security Badge */}
-        <div className="mt-8 pt-8 border-t border-gray-800">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-defence-green rounded-full"></div>
-              <span>ISO 27001 Certified</span>
+        {/* BADGES */}
+        <div className="flex flex-wrap justify-center gap-6 pt-6 text-xs text-gray-400">
+          {[
+            "ISO Certified",
+            "Ministry Approved",
+            "Make in India",
+            "GDPR Secure"
+          ].map((item, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              {item}
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-defence-saffron rounded-full"></div>
-              <span>Approved By Ministry of Defence</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span>Make in India Certified</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-              <span>Trusted By GDPR Compliant</span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
+
+      {/* STYLES */}
+      <style jsx>{`
+        .footer-title {
+          font-size: 12px;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #aaa;
+        }
+
+        .footer-links li {
+          margin-top: 8px;
+        }
+
+        .footer-links a {
+          color: #ccc;
+          transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+          color: #ff7a18;
+          transform: translateX(4px);
+        }
+
+        .footer-item {
+          display: flex;
+          gap: 8px;
+          color: #ccc;
+          align-items: center;
+        }
+      `}</style>
     </footer>
   )
 }

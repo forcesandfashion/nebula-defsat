@@ -1,24 +1,48 @@
-// app/components/Hero.tsx
 "use client"
 
+import { Calendar, MapPin } from "lucide-react"
+import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
-import {  Zap } from "lucide-react"
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const [videoError, setVideoError] = useState(false)
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(console.error)
+    const video = videoRef.current
+    
+    if (video) {
+      // Set playback speed
+      video.playbackRate = 1.2
+      
+      // Force play with multiple attempts
+      const playVideo = () => {
+        video.play().catch((error) => {
+          console.log("Play failed:", error)
+          // Retry after user interaction
+          document.addEventListener('click', () => {
+            video.play().catch(e => console.log("Retry failed:", e))
+          }, { once: true })
+        })
+      }
+      
+      // Wait for video to be ready
+      if (video.readyState >= 2) {
+        playVideo()
+      } else {
+        video.addEventListener('canplay', playVideo)
+      }
+      
+      // Ensure loop
+      video.loop = true
     }
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Clean Background */}
+    <section className="relative w-full min-h-screen flex items-center overflow-hidden">
+      
+      {/* Background Video - Full opacity, no white background */}
       <div className="absolute inset-0 z-0">
-        {/* Video Background */}
         <video
           ref={videoRef}
           autoPlay
@@ -26,73 +50,73 @@ export default function Hero() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: isVideoLoaded ? 1 : 0 }}
-          onLoadedData={() => setIsVideoLoaded(true)}
+          style={{ opacity: 1 }}
+          onError={() => {
+            console.error("Video failed to load")
+            setVideoError(true)
+          }}
         >
           <source src="/video/hero.mp4" type="video/mp4" />
         </video>
-        
-        {/* Subtle Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
+
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+
+        {/* Show error message if video fails */}
+        {videoError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+            <p className="text-white">Video failed to load. Check: /public/video/hero.mp4</p>
+          </div>
+        )}
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 md:px-8">
-        <div className="flex flex-col items-center text-center space-y-16">
-          
-          {/* Hero Text */}
-          <div className="space-y-8 max-w-4xl">
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <Zap className="w-5 h-5 text-white" />
-              <p className="text-white text-sm font-mono tracking-widest">ADVANCED DEFENCE SYSTEMS</p>
-            </div>
-            
-            <h1 className="text-6xl md:text-8xl font-bold leading-none">
-              <span className="block bg-gradient-to-r from-defence-saffron via-white to-defence-green bg-clip-text text-transparent">
-                SECURE
-              </span>
-              <span className="block text-white mt-4">THE NATION</span>
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-20">
+        <div className="grid md:grid-cols-2 items-center gap-10">
+
+          {/* LEFT CONTENT - White text for dark video background */}
+          <div className="text-white space-y-6">
+
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white">
+              DefSat Conference & Expo- 2026
             </h1>
-            
-            <p className="text-xl md:text-2xl text-white/90 leading-relaxed font-light px-4">
-              Next-generation defence technology protecting sovereignty through innovation, 
-              precision, and unwavering vigilance.
-            </p>
+
+            <div className="flex items-center gap-2 text-lg text-white/90">
+              <Calendar className="w-5 h-5" />
+              <span>Feb 24 – 26, 2026 @ 08:00 AM</span>
+            </div>
+
+            <div className="flex items-center gap-2 text-lg text-white/90">
+              <MapPin className="w-5 h-5" />
+              <span>New Delhi, Delhi - India</span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Link href="#">
+                <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 shadow-md">
+                  FOREIGN REGISTRATION
+                </button>
+              </Link>
+
+              <button className="border-2 border-white text-white hover:bg-white/10 px-6 py-3 rounded-md font-semibold transition-all duration-300">
+                Event has ended
+              </button>
+            </div>
+
+            <div className="flex items-center gap-4 pt-4">
+              <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors cursor-pointer backdrop-blur-sm">
+                𝕏
+              </div>
+              <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors cursor-pointer backdrop-blur-sm">
+                in
+              </div>
+              <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors cursor-pointer backdrop-blur-sm">
+                ▶
+              </div>
+            </div>
           </div>
 
-          {/* Feature Indicators */}
-          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { icon: Satellite, label: "SATELLITE", color: "text-defence-saffron" },
-              { icon: Shield, label: "DEFENCE", color: "text-defence-green" },
-              { icon: Radar, label: "SURVEILLANCE", color: "text-blue-400" },
-              { icon: Cpu, label: "AI SYSTEMS", color: "text-purple-400" },
-            ].map((item, index) => (
-              <div 
-                key={index} 
-                className="flex flex-col items-center p-6 rounded-xl backdrop-blur-sm bg-white/5 border border-white/10 hover:border-white/30 transition-all duration-300 group"
-              >
-                <item.icon className={`w-10 h-10 mb-4 ${item.color} group-hover:scale-110 transition-transform`} />
-                <span className="text-white text-sm font-medium tracking-wide">{item.label}</span>
-              </div>
-            ))}
-          </div> */}
-
-          {/* CTA Button */}
-          {/* <Button 
-            size="lg"
-          > */}
-            {/* <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700" /> */}
-            {/* <Shield className="w-6 h-6 mr-3 relative z-10" />
-            <span className="relative z-10">EXPLORE DEFENCE SYSTEMS</span> */}
-          {/* </Button> */}
-        </div>
-      </div>
-
-      {/* Minimal Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div className="flex flex-col items-center gap-2">
-          <div className="w-px h-12 bg-gradient-to-b from-white via-white/50 to-transparent animate-pulse" />
+          <div />
         </div>
       </div>
     </section>

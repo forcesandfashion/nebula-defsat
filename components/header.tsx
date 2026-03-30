@@ -1,132 +1,126 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
+import { useState } from "react"
+import { usePathname } from "next/navigation"
+import { Menu, X } from "lucide-react"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
 
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "auto"
-  }, [isMenuOpen])
+  const navItems = [
+    "home",
+    "agenda",
+    "speakers",
+    "venue",
+    "certificate",
+    "gallery",
+    "membership",
+    "investnow",
+  ]
 
   return (
     <>
-      {/* Header */}
-      <header className="fixed top-0 w-full z-50 border-b border-white/10 bg-background/80 backdrop-blur-xl">
-        <nav className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+      {/* HEADER */}
+      <header className="fixed top-0 w-full z-50 bg-[#f5f5f5]/90 backdrop-blur border-b border-gray-200 shadow-sm">
+        <nav className="max-w-7xl mx-auto px-4 md:px-6 h-24 flex items-center justify-between">
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/nebuladefsat-logo5.png"
-              alt="NebulaDefSat"
-              width={40}
-              height={40}
-              priority
-            />
+          {/* LOGO */}
+          <Link href="/" className="flex flex-col leading-tight">
+            <span className="text-[18px] sm:text-[22px] md:text-[26px] font-bold text-[#c6a96b] tracking-wide">
+              NEBULA DEFSAT
+            </span>
+            <span className="text-[9px] sm:text-[10px] text-gray-600 tracking-wide">
+              Tactical Defence Systems • Made in Bharat
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition">
-              Home
-            </Link>
-            <Link href="/invest-now" className="text-sm text-muted-foreground hover:text-foreground transition">
-              Invest Now
-            </Link>
-            <Link href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition">
-              Contact
-            </Link>
-            <Link href="/membership" className="text-sm text-muted-foreground hover:text-foreground transition">
-              Membership
+          {/* DESKTOP NAV */}
+          <div className="hidden lg:flex items-center gap-2 xl:gap-4 text-[13px] font-medium">
+            {navItems.map((item) => {
+              const path = item === "home" ? "/" : `/${item}`
+              const isActive = pathname === path
+
+              return (
+                <Link
+                  key={item}
+                  href={path}
+                  className={`px-3 py-2 rounded-md transition-all duration-200 whitespace-nowrap
+                    ${
+                      isActive
+                        ? "bg-blue-500 text-white shadow"
+                        : "text-gray-700 hover:text-black hover:bg-gray-200"
+                    }
+                  `}
+                >
+                  {item.toUpperCase()}
+                </Link>
+              )
+            })}
+          </div>
+
+          {/* RIGHT (DESKTOP) */}
+          <div className="hidden lg:flex items-center">
+            <Link
+              href="/login"
+              className={`text-[13px] px-4 py-2 rounded-md transition ${
+                pathname === "/login"
+                  ? "bg-blue-500 text-white"
+                  : "text-gray-700 hover:text-black hover:bg-gray-200"
+              }`}
+            >
+              SIGN IN
             </Link>
           </div>
 
-          {/* Desktop CTA */}
-          <Link
-            href="https://chat.whatsapp.com/HWjnppP8SxW6V2MyMElJCB"
-            className="hidden md:inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-lg hover:opacity-90 transition"
-          >
-            Get Started
-          </Link>
-
-          {/* Mobile Menu Button */}
+          {/* MOBILE BUTTON */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-foreground"
-            aria-label="Toggle menu"
+            className="lg:hidden p-2 rounded-md hover:bg-gray-200 transition"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={
-                  isMenuOpen
-                    ? "M6 18L18 6M6 6l12 12"
-                    : "M4 6h16M4 12h16M4 18h16"
-                }
-              />
-            </svg>
+            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </nav>
       </header>
 
-      {/* Mobile Overlay */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
-          onClick={() => setIsMenuOpen(false)}
-        />
-      )}
-
-      {/* Mobile Menu */}
+      {/* MOBILE MENU */}
       <div
-        className={`
-          fixed top-16 left-0 right-0 z-50 md:hidden
-          transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
-          ${isMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}
-        `}
+        className={`fixed top-24 left-0 right-0 bg-white z-40 shadow-lg transform transition-all duration-300 lg:hidden ${
+          isMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-5 opacity-0 pointer-events-none"
+        }`}
       >
-        <div className="mx-4 mt-2 rounded-2xl border border-white/10 bg-background/90 backdrop-blur-xl shadow-2xl overflow-hidden">
+        <div className="flex flex-col divide-y">
+          {navItems.map((item) => {
+            const path = item === "home" ? "/" : `/${item}`
+            const isActive = pathname === path
 
-          {/* Menu Links */}
-          <div className="flex flex-col divide-y divide-white/10">
-            {[
-              { name: "Home", href: "/" },
-              { name: "Invest Now", href: "/invest-now" },
-              { name: "Contact", href: "#contact" },
-              { name: "Membership", href: "/membership" },
-            ].map((item) => (
+            return (
               <Link
-                key={item.name}
-                href={item.href}
+                key={item}
+                href={path}
                 onClick={() => setIsMenuOpen(false)}
-                className="px-6 py-4 text-base font-medium text-foreground hover:bg-white/5 transition"
+                className={`px-6 py-4 text-[15px] font-medium transition
+                  ${
+                    isActive
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }
+                `}
               >
-                {item.name}
+                {item.toUpperCase()}
               </Link>
-            ))}
-          </div>
+            )
+          })}
 
-          {/* Mobile CTA */}
-          <div className="p-4">
-            <Link
-              href="https://chat.whatsapp.com/HWjnppP8SxW6V2MyMElJCB"
-              onClick={() => setIsMenuOpen(false)}
-              className="flex items-center justify-center w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-white font-semibold shadow-lg hover:opacity-90 transition"
-            >
-              Get Started
-            </Link>
-          </div>
+          {/* SIGN IN MOBILE */}
+          <Link
+            href="/login"
+            onClick={() => setIsMenuOpen(false)}
+            className="px-6 py-4 text-[15px] font-semibold text-blue-600 hover:bg-gray-100"
+          >
+            SIGN IN
+          </Link>
         </div>
       </div>
     </>

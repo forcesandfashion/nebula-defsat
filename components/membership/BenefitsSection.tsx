@@ -1,6 +1,8 @@
+'use client'
+
+// app/components/membership/BenefitsSection.tsx
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { 
-  Users, 
   Globe, 
   Target, 
   Shield, 
@@ -10,99 +12,57 @@ import {
   Network,
   Zap,
   Calendar,
-  FileText,
-  Linkedin
+  FileText
 } from 'lucide-react'
 
 const benefits = [
-  {
-    icon: <Target className="h-6 w-6" />,
-    title: "Strategic Networking",
-    description: "Direct access to 500+ C-level executives from UK and India",
-    gradient: "from-blue-500 to-blue-600"
-  },
-  {
-    icon: <Globe className="h-6 w-6" />,
-    title: "Global Events",
-    description: "Exclusive invitations to G20, WEF, and international summits",
-    gradient: "from-blue-600 to-blue-700"
-  },
-  {
-    icon: <TrendingUp className="h-6 w-6" />,
-    title: "Trade Delegations",
-    description: "Quarterly pitch nights with 3-4 cross-border opportunities",
-    gradient: "from-blue-700 to-blue-800"
-  },
-  {
-    icon: <Shield className="h-6 w-6" />,
-    title: "Policy Access",
-    description: "Exclusive ministry-level delegations and government meetings",
-    gradient: "from-blue-800 to-blue-900"
-  },
-  {
-    icon: <Award className="h-6 w-6" />,
-    title: "Executive Education",
-    description: "L&D programs by domain experts and industry leaders",
-    gradient: "from-blue-900 to-blue-950"
-  },
-  {
-    icon: <Briefcase className="h-6 w-6" />,
-    title: "Investment Rounds",
-    description: "Private investor meetings and funding opportunities",
-    gradient: "from-blue-950 to-indigo-900"
-  },
-  {
-    icon: <Network className="h-6 w-6" />,
-    title: "Digital Community",
-    description: "24/7 access to exclusive LinkedIn, Discord, and Telegram groups",
-    gradient: "from-indigo-900 to-purple-900"
-  },
-  {
-    icon: <Zap className="h-6 w-6" />,
-    title: "Tech Innovation",
-    description: "Access to UK-India Tech Summit and hack-a-thons",
-    gradient: "from-purple-900 to-violet-900"
-  }
+  { icon: <Target className="h-6 w-6" />, title: "Strategic Networking", description: "Direct access to 500+ C-level executives from UK and India" },
+  { icon: <Globe className="h-6 w-6" />, title: "Global Events", description: "Exclusive invitations to G20, WEF, and international summits" },
+  { icon: <TrendingUp className="h-6 w-6" />, title: "Trade Delegations", description: "Quarterly pitch nights with 3-4 cross-border opportunities" },
+  { icon: <Shield className="h-6 w-6" />, title: "Policy Access", description: "Exclusive ministry-level delegations and government meetings" },
+  { icon: <Award className="h-6 w-6" />, title: "Executive Education", description: "L&D programs by domain experts and industry leaders" },
+  { icon: <Briefcase className="h-6 w-6" />, title: "Investment Rounds", description: "Private investor meetings and funding opportunities" },
+  { icon: <Network className="h-6 w-6" />, title: "Digital Community", description: "24/7 access to exclusive LinkedIn, Discord, and Telegram groups" },
+  { icon: <Zap className="h-6 w-6" />, title: "Tech Innovation", description: "Access to UK-India Tech Summit and hack-a-thons" }
 ]
 
 export default function BenefitsSection() {
   return (
-    <section id="benefits" className="py-20 relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-blue-950/5 to-black" />
-      
-      <div className="container relative z-10 mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 mb-4">
-            <div className="h-px w-8 bg-blue-500" />
-            <span className="text-blue-400 font-semibold text-sm uppercase tracking-wider">EXCLUSIVE BENEFITS</span>
-            <div className="h-px w-8 bg-blue-500" />
+    <section className="py-16 bg-white relative">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <div className="h-px w-8 bg-gradient-to-r from-transparent to-orange-400" />
+            <span className="text-orange-600 font-semibold text-sm uppercase tracking-wider">EXCLUSIVE BENEFITS</span>
+            <div className="h-px w-8 bg-gradient-to-l from-transparent to-orange-400" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="text-white">Unparalleled </span>
-            <span className="premium-text-gradient">Member Advantages</span>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">
+            Unparalleled Member Advantages
           </h2>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+          <p className="text-gray-600 text-lg leading-relaxed">
             Gain access to exclusive opportunities, resources, and networks that 
             accelerate business growth and strategic partnerships.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {/* Benefits Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {benefits.map((benefit, index) => (
             <Card 
               key={index} 
-              className="premium-card-gradient border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 hover-glow"
+              className="group bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
             >
-              <CardHeader>
-                <div className={`p-3 rounded-xl bg-gradient-to-br ${benefit.gradient} w-fit mb-4`}>
-                  {benefit.icon}
+              <CardContent className="p-6">
+                <div className="mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+                    {benefit.icon}
+                  </div>
                 </div>
-                <CardTitle className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-black mb-2">
                   {benefit.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-blue-200 text-sm leading-relaxed">
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
                   {benefit.description}
                 </p>
               </CardContent>
@@ -110,65 +70,43 @@ export default function BenefitsSection() {
           ))}
         </div>
 
-        {/* Digital Platforms */}
-        {/* <Card className="premium-card-gradient border border-blue-500/20 mb-8">
-          <CardContent className="p-8">
-            <div className="flex items-center space-x-3 mb-6">
-              <Linkedin className="h-6 w-6 text-blue-400" />
-              <h3 className="text-2xl font-bold text-white">Digital Ecosystem Access</h3>
+        {/* Bottom Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mt-10">
+          {/* Monthly Events */}
+          <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-orange-600" />
+              </div>
+              <h3 className="text-lg font-bold text-black">Monthly Events Calendar</h3>
             </div>
-            <p className="text-blue-200 mb-8">
-              Connect with fellow members through our exclusive digital platforms, 
-              facilitating continuous networking and opportunity sharing.
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-              {['LinkedIn', 'Discord', 'Telegram', 'WhatsApp', 'ClubHouse', 'Facebook'].map((platform) => (
-                <div 
-                  key={platform}
-                  className="glass-effect border border-blue-500/20 rounded-lg p-4 text-center hover:border-blue-500/40 transition-colors cursor-pointer"
-                >
-                  <div className="text-blue-300 font-semibold">{platform}</div>
+            <div className="grid grid-cols-2 gap-3">
+              {['Breakfast Club Receptions', 'City Chapter Meets', 'Industry Roundtables', 'Virtual Masterclasses'].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
+                  <span className="text-gray-600 text-sm">{item}</span>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card> */}
+          </div>
 
-        {/* Additional Benefits */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="premium-card-gradient border border-blue-500/20">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <Calendar className="h-5 w-5 text-blue-400" />
-                <h4 className="text-lg font-semibold text-white">Monthly Events Calendar</h4>
+          {/* Premium Resources */}
+          <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
+                <FileText className="h-5 w-5 text-orange-600" />
               </div>
-              <ul className="space-y-3">
-                {['Breakfast Club Receptions', 'City Chapter Meets', 'Industry Roundtables', 'Virtual Masterclasses'].map((item) => (
-                  <li key={item} className="flex items-center space-x-3">
-                    <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-                    <span className="text-blue-200">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="premium-card-gradient border border-blue-500/20">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <FileText className="h-5 w-5 text-blue-400" />
-                <h4 className="text-lg font-semibold text-white">Premium Resources</h4>
-              </div>
-              <ul className="space-y-3">
-                {['Research Papers', 'Industry Reports', 'Market Analysis', 'Policy Briefings'].map((item) => (
-                  <li key={item} className="flex items-center space-x-3">
-                    <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-                    <span className="text-blue-200">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+              <h3 className="text-lg font-bold text-black">Premium Resources</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {['Research Papers', 'Industry Reports', 'Market Analysis', 'Policy Briefings'].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
+                  <span className="text-gray-600 text-sm">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
