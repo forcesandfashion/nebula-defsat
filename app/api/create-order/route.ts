@@ -1,14 +1,25 @@
 import { NextResponse } from 'next/server';
 
-const CASHFREE_APP_ID = "process.env.NEXT_PUBLIC_CASHFREE_APP_ID";
-const CASHFREE_SECRET_KEY = "process.env.NEXT_PUBLIC_CASHFREE_SECRET_KEY";
-const CASHFREE_API_URL = "https://api.cashfree.com/pg/orders";
-const RETURN_URL_BASE = "https://nebuladefsat.com";
+const CASHFREE_APP_ID = process.env.NEXT_PUBLIC_CASHFREE_APP_ID!;
+const CASHFREE_SECRET_KEY = process.env.NEXT_PUBLIC_CASHFREE_SECRET_KEY!;
 
-// #added the comment to testing
+// ✅ Production endpoint
+const CASHFREE_API_URL = 'https://api.cashfree.com/pg/orders';
+const RETURN_URL_BASE = process.env.NEXT_PUBLIC_RETURN_URL || 'https://nebuladefsat.com/payment-status';
+
 export async function POST(request: Request) {
   try {
-    const { orderId, amount, customerId, tierName } = await request.json();
+    // ✅ Validate env vars are loaded
+    if (!CASHFREE_APP_ID || !CASHFREE_SECRET_KEY) {
+      console.error('Missing Cashfree credentials in environment variables');
+      return NextResponse.json(
+        { error: 'Payment service not configured. Please contact support.' },
+        { status: 500 }
+      );
+    }
+
+    const { orderId, amount, customerId, customerName, customerEmail, customerPhone, tierName } =
+      await request.json();
 
     if (!orderId || !amount || !customerId) {
       return NextResponse.json(
@@ -17,67 +28,75 @@ export async function POST(request: Request) {
       );
     }
 
-    // ✅ FIX: Cashfree expects amount in RUPEES, NOT paise
-    // DO NOT multiply by 100
-    const orderAmount = Number(amount);
+    // ✅ CRITICAL: Cashfree expects amount in RUPEES, NOT paise
+    // 15000 INR → send 15000, NOT 1500000
+    const orderAmount = parseFloat(Number(amount).toFixed(2));
 
-    console.log('Creating Cashfree order:', { orderId, orderAmount, tierName });
+    console.log('Creating Cashfree order:', {
+      orderId,
+      orderAmount,
+      tierName,
+      appId: CASHFREE_APP_ID.substring(0, 8) + '...', // log only prefix for security
+    });
+
+    const requestBody = {
+      order_id: orderId,
+      order_amount: orderAmount,
+      order_currency: 'INR',
+      customer_details: {
+        customer_id: customerId,
+        customer_name: customerName || 'Member',
+        customer_email: customerEmail || 'member@ukindiaforum.org',
+        customer_phone: customerPhone || '9999999999',
+      },
+      order_meta: {
+        // ✅ Use {order_id} Cashfree placeholder — NOT JS template literal
+        return_url: `${RETURN_URL_BASE}/payment-status?order_id={order_id}`,
+      },
+      order_note: `${tierName || 'Membership'} - UK India CEO Forum`,
+    };
 
     const response = await fetch(CASHFREE_API_URL, {
       method: 'POST',
       headers: {
-        'x-client-id': CASHFREE_APP_ID,
-        'x-client-secret': CASHFREE_SECRET_KEY,
-        'x-api-version': '2023-08-01',
+        'x-client-id': CASHFREE_APP_ID.trim(),           // ✅ .trim() prevents whitespace 401s
+        'x-client-secret': CASHFREE_SECRET_KEY.trim(),   // ✅ .trim() prevents whitespace 401s
+        'x-api-version': '2025-01-01',                   // ✅ FIXED: was 2023-08-01, must be latest
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        order_id: orderId,
-        order_amount: orderAmount,      // ✅ Rupees directly (e.g. 15000)
-        order_currency: 'INR',
-        customer_details: {
-          customer_id: customerId,
-          customer_name: 'Member',
-          customer_email: 'member@ukindiaforum.org',
-          customer_phone: '9999999999',
-        },
-        order_meta: {
-          return_url: `${RETURN_URL_BASE}/payment-status?order_id={order_id}`,
-          // ✅ Note: use {order_id} placeholder, not the JS variable
-          // Cashfree replaces this at runtime
-        },
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const data = await response.json();
 
-    console.log('Cashfree response:', data);
+    console.log('Cashfree response status:', response.status);
+    console.log('Cashfree response body:', JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       const errorMsg = data.message || data.error || 'Unknown Cashfree error';
-      console.error('Cashfree error:', errorMsg, data);
+      console.error('Cashfree API error:', response.status, errorMsg, data);
       return NextResponse.json(
-        { error: errorMsg },
+        { error: errorMsg, details: data },
         { status: response.status }
       );
     }
 
-    // ✅ FIX: Cashfree returns `payment_session_id`, not `payment_link`
-    // The frontend uses the JS SDK with this session ID to open the payment page
+    // ✅ Cashfree returns payment_session_id — used by frontend JS SDK
     if (data.payment_session_id) {
       return NextResponse.json({
         payment_session_id: data.payment_session_id,
         order_id: data.order_id,
+        cf_order_id: data.cf_order_id,
       });
-    } else {
-      console.error('No payment_session_id in response:', data);
-      return NextResponse.json(
-        { error: 'No payment session returned from Cashfree' },
-        { status: 502 }
-      );
     }
+
+    console.error('No payment_session_id in Cashfree response:', data);
+    return NextResponse.json(
+      { error: 'No payment session returned from Cashfree' },
+      { status: 502 }
+    );
   } catch (error: any) {
-    console.error('Server error:', error);
+    console.error('Server error in create-order:', error);
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }

@@ -9,6 +9,8 @@ import {
 import { useState } from 'react';
 import Image from 'next/image';
 
+// ─── Tier definitions (unchanged) ────────────────────────────────────────────
+
 const tiers = [
   {
     name: "Individual",
@@ -70,72 +72,91 @@ const tiers = [
 const BANK_ACCOUNT = "018905014878";
 const SWIFT_CODE = "ICICINBBXXX";
 
-// ✅ Helper: dynamically load Cashfree JS SDK
-const loadCashfreeSDK = (): Promise<void> => {
+// ─── Tier helpers ─────────────────────────────────────────────────────────────
+
+function getTierAmount(tierName: string): number {
+  switch (tierName) {
+    case 'Individual':       return 15000;
+    case 'SME Executive':    return 20000;
+    case 'Corporate Elite':  return 25000;
+    case 'Startup & Student': return 3000;
+    default:                 return 15000;
+  }
+}
+
+function getTierPrice(tierName: string): string {
+  switch (tierName) {
+    case 'Individual':       return '500 GBP / ₹15,000';
+    case 'SME Executive':    return '750 GBP / ₹20,000';
+    case 'Corporate Elite':  return '1,000 GBP / ₹25,000';
+    case 'Startup & Student': return '100 GBP / ₹3,000';
+    default:                 return '500 GBP / ₹15,000';
+  }
+}
+
+// ─── Load Cashfree JS SDK dynamically ────────────────────────────────────────
+
+function loadCashfreeSDK(): Promise<void> {
   return new Promise((resolve, reject) => {
-    if (typeof window === 'undefined') return reject('No window');
+    if (typeof window === 'undefined') return reject(new Error('No window'));
     if ((window as any).Cashfree) return resolve(); // already loaded
 
+    const existing = document.getElementById('cashfree-sdk');
+    if (existing) {
+      // Script tag exists but Cashfree not ready yet — wait for it
+      existing.addEventListener('load', () => resolve());
+      existing.addEventListener('error', () => reject(new Error('SDK load failed')));
+      return;
+    }
+
     const script = document.createElement('script');
+    script.id = 'cashfree-sdk';
     script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
     script.async = true;
     script.onload = () => resolve();
     script.onerror = () => reject(new Error('Failed to load Cashfree SDK'));
     document.head.appendChild(script);
   });
-};
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
 
 export default function MembershipTiers() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'bank' | 'paytm' | 'international-qr'>('upi');
+  const [paymentMethod, setPaymentMethod] = useState<'cashfree' | 'bank' | 'paytm' | 'international-qr'>('cashfree');
 
   const handlePayNow = (tierName: string) => {
     setSelectedTier(tierName);
+    setPaymentMethod('cashfree');
     setShowPaymentModal(true);
   };
 
-  const getTierAmount = (tierName: string): string => {
-    switch (tierName) {
-      case 'Individual': return '15000';
-      case 'SME Executive': return '20000';
-      case 'Corporate Elite': return '25000';
-      case 'Startup & Student': return '3000';
-      default: return '15000';
-    }
-  };
-
-  const getTierPrice = (tierName: string): string => {
-    switch (tierName) {
-      case 'Individual': return '500 GBP / 15,000 INR';
-      case 'SME Executive': return '750 GBP / 20,000 INR';
-      case 'Corporate Elite': return '1,000 GBP / 25,000 INR';
-      case 'Startup & Student': return '100 GBP / 3,000 INR';
-      default: return '500 GBP / 15,000 INR';
-    }
-  };
+  // ─── Payment Modal ──────────────────────────────────────────────────────────
 
   const PaymentModal = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-    // ✅ FIXED: Full Cashfree SDK checkout flow
     const handleCashfreePayment = async () => {
       setIsLoading(true);
-      const amount = parseInt(getTierAmount(selectedTier || ''));
-      const orderId = `ukic_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      setErrorMsg(null);
+
+      const amount  = getTierAmount(selectedTier || '');
+      const orderId = `ukic_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
       const customerId = `cust_${Date.now()}`;
 
       try {
-        // Step 1: Load SDK
+        // Step 1 — Load SDK
         await loadCashfreeSDK();
 
-        // Step 2: Create order on your backend → get payment_session_id
+        // Step 2 — Create order on your server → get payment_session_id
         const response = await fetch('/api/create-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             orderId,
-            amount,          // plain rupees: 15000, 20000, etc.
+            amount,             // plain rupees: 15000 / 20000 / 25000 / 3000
             customerId,
             tierName: selectedTier,
           }),
@@ -144,37 +165,34 @@ export default function MembershipTiers() {
         const data = await response.json();
 
         if (!response.ok || !data.payment_session_id) {
-          alert(`Payment error: ${data.error || 'Could not create payment session'}`);
+          const msg = data.error || 'Could not create payment session. Please try again.';
+          setErrorMsg(msg);
           setIsLoading(false);
           return;
         }
 
-        // Step 3: Initialize Cashfree with your production App ID
-        const cashfree = (window as any).Cashfree({
-          mode: 'production',  // ✅ 'sandbox' for testing, 'production' for live
-        });
+        // Step 3 — Initialise Cashfree with production mode
+        const cashfree = (window as any).Cashfree({ mode: 'production' });
 
-        // Step 4: Open Cashfree checkout (renders UPI, cards, netbanking etc.)
-        const checkoutOptions = {
-          paymentSessionId: data.payment_session_id,
-          redirectTarget: '_modal',  // opens as modal overlay — no page redirect
-        };
-
-        setShowPaymentModal(false); // close our modal before Cashfree opens theirs
+        // Step 4 — Close our modal and open Cashfree's native checkout overlay
+        setShowPaymentModal(false);
         setIsLoading(false);
 
-        cashfree.checkout(checkoutOptions).then((result: any) => {
-          if (result.error) {
-            alert(`Payment failed: ${result.error.message}`);
-          } else if (result.paymentDetails) {
-            // Payment success
-            window.location.href = `/payment-status?order_id=${orderId}`;
-          }
+        const result = await cashfree.checkout({
+          paymentSessionId: data.payment_session_id,
+          redirectTarget: '_modal',   // opens as an overlay — no full-page redirect
         });
 
-      } catch (error: any) {
-        console.error('Payment error:', error);
-        alert('Something went wrong. Please try again or use another payment method.');
+        if (result?.error) {
+          alert(`Payment failed: ${result.error.message}`);
+        } else if (result?.paymentDetails) {
+          // Payment attempted — redirect to status page
+          window.location.href = `/payment-status?order_id=${data.order_id}`;
+        }
+
+      } catch (err: any) {
+        console.error('Cashfree payment error:', err);
+        setErrorMsg(err.message || 'An unexpected error occurred. Please try again.');
         setIsLoading(false);
       }
     };
@@ -185,13 +203,15 @@ export default function MembershipTiers() {
           className="premium-card-gradient border border-blue-500/30 rounded-2xl max-w-md max-h-[90vh] w-full p-8 relative overflow-y-auto"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
+          {/* Close */}
           <button
             onClick={() => setShowPaymentModal(false)}
-            className="absolute top-4 right-4 text-blue-300 hover:text-white"
+            className="absolute top-4 right-4 text-blue-300 hover:text-white transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
 
+          {/* Header */}
           <div className="text-center mb-6">
             <div className="p-3 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl w-fit mx-auto mb-4">
               <CreditCard className="h-8 w-8 text-white" />
@@ -203,24 +223,32 @@ export default function MembershipTiers() {
             </div>
           </div>
 
-          {/* Payment Methods */}
-          <div className="space-y-4 mb-6">
-            {/* UPI via Cashfree */}
+          {/* Error message */}
+          {errorMsg && (
+            <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-red-300 text-sm text-center">
+              {errorMsg}
+            </div>
+          )}
+
+          {/* Payment method tabs */}
+          <div className="space-y-3 mb-6">
+
+            {/* Cashfree */}
             <div
               className={`p-4 rounded-xl cursor-pointer transition-all ${
-                paymentMethod === 'upi'
+                paymentMethod === 'cashfree'
                   ? 'bg-blue-500/20 border border-blue-500/50'
                   : 'bg-blue-500/10 border border-blue-500/20 hover:border-blue-500/30'
               }`}
-              onClick={() => setPaymentMethod('upi')}
+              onClick={() => setPaymentMethod('cashfree')}
             >
               <div className="flex items-center space-x-3">
                 <Smartphone className="h-5 w-5 text-blue-400" />
                 <div className="flex-1">
                   <div className="text-white font-semibold">Pay via Cashfree</div>
-                  <div className="text-blue-300 text-sm">UPI, Cards, Netbanking & more</div>
+                  <div className="text-blue-300 text-sm">UPI · Cards · Netbanking · Wallets</div>
                 </div>
-                {paymentMethod === 'upi' && <div className="h-3 w-3 rounded-full bg-blue-500" />}
+                {paymentMethod === 'cashfree' && <div className="h-3 w-3 rounded-full bg-blue-500" />}
               </div>
             </div>
 
@@ -256,7 +284,7 @@ export default function MembershipTiers() {
                 <QrCode className="h-5 w-5 text-blue-400" />
                 <div className="flex-1">
                   <div className="text-white font-semibold">Indian UPI QR</div>
-                  <div className="text-blue-300 text-sm">Scan for Indian payments</div>
+                  <div className="text-blue-300 text-sm">Scan for INR payments</div>
                 </div>
                 {paymentMethod === 'paytm' && <div className="h-3 w-3 rounded-full bg-blue-500" />}
               </div>
@@ -275,7 +303,7 @@ export default function MembershipTiers() {
                 <Earth className="h-5 w-5 text-blue-400" />
                 <div className="flex-1">
                   <div className="text-white font-semibold">International QR</div>
-                  <div className="text-blue-300 text-sm">Scan for international payments</div>
+                  <div className="text-blue-300 text-sm">GBP / USD payments</div>
                 </div>
                 {paymentMethod === 'international-qr' && <div className="h-3 w-3 rounded-full bg-blue-500" />}
               </div>
@@ -283,12 +311,12 @@ export default function MembershipTiers() {
           </div>
 
           {/* ── Cashfree section ── */}
-          {paymentMethod === 'upi' && (
+          {paymentMethod === 'cashfree' && (
             <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
               <div className="text-center">
-                <div className="text-blue-300 text-sm mb-2">Secure Payment via Cashfree</div>
                 <p className="text-blue-300 text-sm mb-4">
-                  Pay with UPI, Credit/Debit card, Netbanking, and more.
+                  You'll see Cashfree's secure payment screen with UPI, Credit/Debit cards,
+                  Netbanking, and more.
                 </p>
                 <Button
                   onClick={handleCashfreePayment}
@@ -297,9 +325,14 @@ export default function MembershipTiers() {
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
                       Opening Payment...
                     </span>
@@ -314,65 +347,77 @@ export default function MembershipTiers() {
             </div>
           )}
 
-          {/* ── Bank Transfer section ── */}
+          {/* ── Bank Transfer ── */}
           {paymentMethod === 'bank' && (
-            <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-              <div className="space-y-3">
-                <div><div className="text-blue-300 text-sm">Account Number</div><div className="text-white font-mono">{BANK_ACCOUNT}</div></div>
-                <div><div className="text-blue-300 text-sm">Bank Name</div><div className="text-white">ICICI Bank</div></div>
-                <div><div className="text-blue-300 text-sm">IFSC Code</div><div className="text-white">ICIC0000189</div></div>
-                <div><div className="text-blue-300 text-sm">SWIFT Code</div><div className="text-white">{SWIFT_CODE}</div></div>
-                <div><div className="text-blue-300 text-sm">Beneficiary Name</div><div className="text-white">UK-India CEO Forum</div></div>
+            <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 space-y-3">
+              <div>
+                <div className="text-blue-300 text-xs uppercase tracking-wide mb-1">Account Number</div>
+                <div className="text-white font-mono text-sm">{BANK_ACCOUNT}</div>
               </div>
+              <div>
+                <div className="text-blue-300 text-xs uppercase tracking-wide mb-1">Bank Name</div>
+                <div className="text-white text-sm">ICICI Bank</div>
+              </div>
+              <div>
+                <div className="text-blue-300 text-xs uppercase tracking-wide mb-1">IFSC Code</div>
+                <div className="text-white font-mono text-sm">ICIC0000189</div>
+              </div>
+              <div>
+                <div className="text-blue-300 text-xs uppercase tracking-wide mb-1">SWIFT Code</div>
+                <div className="text-white font-mono text-sm">{SWIFT_CODE}</div>
+              </div>
+              <div>
+                <div className="text-blue-300 text-xs uppercase tracking-wide mb-1">Beneficiary Name</div>
+                <div className="text-white text-sm">UK-India CEO Forum</div>
+              </div>
+              <Button
+                className="w-full premium-blue-gradient text-white mt-2"
+                onClick={() => setShowPaymentModal(false)}
+              >
+                Done
+              </Button>
             </div>
           )}
 
           {/* ── Indian UPI QR ── */}
           {paymentMethod === 'paytm' && (
-            <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-              <div className="text-center">
-                <div className="text-blue-300 text-sm mb-2">Indian UPI QR Code</div>
-                <div className="mt-4 p-4 bg-white rounded-lg inline-block">
-                  <Image
-                    src="/nebula-qr.jpeg"
-                    alt="Indian UPI QR"
-                    width={520}
-                    height={520}
-                    className="w-64 h-64 object-contain rounded-lg"
-                  />
-                  <div className="text-sm font-semibold mt-2 text-black">Indian UPI QR Code</div>
-                  <div className="text-xs opacity-70">Scan for INR payments</div>
-                </div>
+            <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 text-center">
+              <div className="text-blue-300 text-sm mb-3">Indian UPI QR Code</div>
+              <div className="p-4 bg-white rounded-lg inline-block">
+                <Image
+                  src="/nebula-qr.jpeg"
+                  alt="Indian UPI QR"
+                  width={256}
+                  height={256}
+                  className="w-56 h-56 object-contain rounded"
+                />
+                <div className="text-xs text-gray-600 mt-2">Scan for INR payments</div>
               </div>
+              <Button
+                className="w-full premium-blue-gradient text-white mt-4"
+                onClick={() => setShowPaymentModal(false)}
+              >
+                Done
+              </Button>
             </div>
           )}
 
           {/* ── International QR ── */}
           {paymentMethod === 'international-qr' && (
-            <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
-              <div className="text-center">
-                <div className="text-blue-300 text-sm mb-2">International QR Code</div>
-                <div className="mt-4 p-4 bg-white rounded-lg inline-block">
-                  <Image
-                    src="/wise-qr-code.jpeg"
-                    alt="International Payment QR"
-                    width={520}
-                    height={520}
-                    className="w-64 h-64 object-contain rounded-lg"
-                  />
-                </div>
+            <div className="mb-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20 text-center">
+              <div className="text-blue-300 text-sm mb-3">International QR Code</div>
+              <div className="p-4 bg-white rounded-lg inline-block">
+                <Image
+                  src="/wise-qr-code.jpeg"
+                  alt="International Payment QR"
+                  width={256}
+                  height={256}
+                  className="w-56 h-56 object-contain rounded"
+                />
               </div>
-            </div>
-          )}
-
-          {/* Proceed button for non-Cashfree methods */}
-          {paymentMethod !== 'upi' && (
-            <div className="flex space-x-4">
               <Button
-                className="flex-1 premium-blue-gradient text-white"
-                onClick={() => {
-                  setShowPaymentModal(false);
-                }}
+                className="w-full premium-blue-gradient text-white mt-4"
+                onClick={() => setShowPaymentModal(false)}
               >
                 Done
               </Button>
@@ -383,10 +428,11 @@ export default function MembershipTiers() {
     );
   };
 
+  // ─── Page section ────────────────────────────────────────────────────────────
+
   return (
     <>
       <section id="tiers" className="py-32 relative overflow-hidden">
-        {/* … all your existing section JSX stays exactly the same … */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
           <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/10 to-transparent" />
@@ -403,6 +449,7 @@ export default function MembershipTiers() {
         </div>
 
         <div className="container relative z-10 mx-auto px-4">
+          {/* Heading */}
           <div className="text-center mb-20">
             <div className="inline-flex items-center space-x-4 mb-6">
               <div className="h-px w-12 bg-gradient-to-r from-transparent to-blue-500" />
@@ -430,17 +477,14 @@ export default function MembershipTiers() {
             </p>
           </div>
 
+          {/* Tier cards */}
           <div className="relative">
             <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-blue-500/20 via-blue-500/10 to-blue-500/20" />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {tiers.map((tier, index) => (
                 <div
                   key={index}
-                  className={`
-                    relative group
-                    ${tier.highlighted ? 'lg:transform lg:-translate-y-8' : ''}
-                    transition-all duration-500
-                  `}
+                  className={`relative group ${tier.highlighted ? 'lg:transform lg:-translate-y-8' : ''} transition-all duration-500`}
                 >
                   <div className={`absolute top-0 left-0 w-4 h-4 border-t border-l ${tier.borderColor}`} />
                   <div className={`absolute top-0 right-0 w-4 h-4 border-t border-r ${tier.borderColor}`} />
@@ -458,45 +502,34 @@ export default function MembershipTiers() {
                   )}
 
                   <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
-                    tier.highlighted ? 'bg-gradient-to-r from-blue-500/10 via-blue-400/10 to-blue-500/10' : 'bg-gradient-to-r from-blue-500/5 via-blue-400/5 to-blue-500/5'
+                    tier.highlighted
+                      ? 'bg-gradient-to-r from-blue-500/10 via-blue-400/10 to-blue-500/10'
+                      : 'bg-gradient-to-r from-blue-500/5 via-blue-400/5 to-blue-500/5'
                   } blur-xl`} />
 
-                  <Card
-                    className={`
-                      relative z-10 h-full
-                      bg-gradient-to-br ${tier.gradient}
-                      border ${tier.borderColor}
-                      backdrop-blur-sm
-                      transition-all duration-500
-                      group-hover:border-blue-500/70
-                      group-hover:shadow-2xl
-                      ${tier.highlighted ? 'shadow-2xl shadow-blue-500/20' : 'shadow-xl shadow-black/20'}
-                      overflow-hidden
-                    `}
-                  >
+                  <Card className={`
+                    relative z-10 h-full
+                    bg-gradient-to-br ${tier.gradient}
+                    border ${tier.borderColor}
+                    backdrop-blur-sm
+                    transition-all duration-500
+                    group-hover:border-blue-500/70
+                    group-hover:shadow-2xl
+                    ${tier.highlighted ? 'shadow-2xl shadow-blue-500/20' : 'shadow-xl shadow-black/20'}
+                    overflow-hidden
+                  `}>
                     <div className="absolute inset-0 opacity-5">
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.3)_0%,transparent_50%)]" />
                     </div>
 
                     <CardHeader className="pt-12 pb-8 relative">
-                      <div className={`
-                        relative mb-8
-                        ${tier.highlighted ? 'scale-110' : ''}
-                        transition-transform duration-300
-                      `}>
-                        <div className={`
-                          absolute inset-0 rounded-2xl
-                          ${tier.highlighted ? 'bg-blue-500/30' : 'bg-blue-500/20'}
-                          blur-xl
-                        `} />
-                        <div className={`
-                          relative p-5 rounded-2xl
-                          ${tier.highlighted
+                      <div className={`relative mb-8 ${tier.highlighted ? 'scale-110' : ''} transition-transform duration-300`}>
+                        <div className={`absolute inset-0 rounded-2xl ${tier.highlighted ? 'bg-blue-500/30' : 'bg-blue-500/20'} blur-xl`} />
+                        <div className={`relative p-5 rounded-2xl ${
+                          tier.highlighted
                             ? 'bg-gradient-to-br from-blue-600 to-blue-800 shadow-lg shadow-blue-500/30'
                             : 'bg-gradient-to-br from-gray-800 to-gray-900 border border-blue-500/30'
-                          }
-                          flex items-center justify-center w-16 h-16 mx-auto
-                        `}>
+                        } flex items-center justify-center w-16 h-16 mx-auto`}>
                           {tier.icon}
                         </div>
                       </div>
@@ -504,17 +537,11 @@ export default function MembershipTiers() {
                       <CardTitle className="text-3xl font-bold text-center mb-2">
                         <span className="text-white">{tier.name}</span>
                       </CardTitle>
-                      <p className="text-blue-300 text-center font-medium">
-                        {tier.tagline}
-                      </p>
+                      <p className="text-blue-300 text-center font-medium">{tier.tagline}</p>
 
                       <div className="text-center mt-8">
-                        <div className="text-4xl font-bold text-white mb-2">
-                          {tier.priceGBP}
-                        </div>
-                        <div className="text-blue-300 font-medium">
-                          {tier.priceINR}
-                        </div>
+                        <div className="text-4xl font-bold text-white mb-2">{tier.priceGBP}</div>
+                        <div className="text-blue-300 font-medium">{tier.priceINR}</div>
                       </div>
                     </CardHeader>
 
@@ -523,22 +550,14 @@ export default function MembershipTiers() {
                         {tier.features.map((feature, idx) => (
                           <div
                             key={idx}
-                            className="flex items-center space-x-4 p-3 rounded-lg group/feature hover:bg-blue-500/10 transition-colors duration-300"
+                            className="flex items-center space-x-4 p-3 rounded-lg hover:bg-blue-500/10 transition-colors duration-300"
                           >
-                            <div className={`
-                              p-2 rounded-lg
-                              ${tier.highlighted
-                                ? 'bg-blue-500/20 text-blue-400'
-                                : 'bg-blue-900/30 text-blue-400'
-                              }
-                              flex-shrink-0
-                            `}>
+                            <div className={`p-2 rounded-lg ${
+                              tier.highlighted ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-900/30 text-blue-400'
+                            } flex-shrink-0`}>
                               {feature.icon}
                             </div>
-                            <span className={`
-                              ${tier.highlighted ? 'text-blue-100' : 'text-blue-200'}
-                              font-medium
-                            `}>
+                            <span className={`${tier.highlighted ? 'text-blue-100' : 'text-blue-200'} font-medium`}>
                               {feature.text}
                             </span>
                           </div>
@@ -547,10 +566,8 @@ export default function MembershipTiers() {
 
                       <Button
                         className={`
-                          w-full py-6 rounded-xl font-bold text-lg
-                          relative overflow-hidden
-                          transition-all duration-500
-                          group-hover:scale-[1.02]
+                          w-full py-6 rounded-xl font-bold text-lg relative overflow-hidden
+                          transition-all duration-500 group-hover:scale-[1.02]
                           ${tier.highlighted
                             ? 'premium-blue-gradient text-white shadow-lg shadow-blue-500/30'
                             : 'bg-gradient-to-br from-gray-800 to-gray-900 border border-blue-500/30 text-blue-300 hover:text-white hover:border-blue-500/50'
@@ -558,20 +575,10 @@ export default function MembershipTiers() {
                         `}
                         onClick={() => handlePayNow(tier.name)}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         <span className="relative z-10 flex items-center justify-center">
-                          {tier.highlighted ? (
-                            <>
-                              <CreditCard className="mr-3 h-5 w-5" />
-                              Pay Now
-                              <Sparkles className="ml-3 h-5 w-5 animate-pulse" />
-                            </>
-                          ) : (
-                            <>
-                              <CreditCard className="mr-3 h-5 w-5" />
-                              Pay Now
-                            </>
-                          )}
+                          <CreditCard className="mr-3 h-5 w-5" />
+                          Pay Now
+                          {tier.highlighted && <Sparkles className="ml-3 h-5 w-5 animate-pulse" />}
                         </span>
                       </Button>
 
@@ -590,7 +597,7 @@ export default function MembershipTiers() {
             </div>
           </div>
 
-          {/* Startup & Student Card */}
+          {/* Startup & Student card */}
           <div className="mt-20 max-w-4xl mx-auto">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-green-500/5 to-blue-500/5 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -603,9 +610,7 @@ export default function MembershipTiers() {
                           <Shield className="h-8 w-8 text-green-400" />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold text-white mb-2">
-                            Startup & Student Program
-                          </h3>
+                          <h3 className="text-2xl font-bold text-white mb-2">Startup & Student Program</h3>
                           <p className="text-blue-200">
                             Special access for innovators and future leaders. Get essential
                             networking opportunities at an unprecedented value.
@@ -621,15 +626,12 @@ export default function MembershipTiers() {
                         ))}
                       </div>
                     </div>
-
                     <div className="text-center lg:text-right">
                       <div className="mb-4">
                         <div className="text-3xl font-bold text-white mb-1">100 GBP</div>
                         <div className="text-blue-300 font-medium">3,000 INR</div>
                       </div>
-                      <p className="text-blue-400 text-sm mt-4 mb-6">
-                        Limited spots available each quarter
-                      </p>
+                      <p className="text-blue-400 text-sm mt-4 mb-6">Limited spots available each quarter</p>
                       <Button
                         className="premium-blue-gradient text-white px-8 py-6 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all duration-300 w-full lg:w-auto"
                         onClick={() => handlePayNow('Startup & Student')}
@@ -645,44 +647,24 @@ export default function MembershipTiers() {
             </div>
           </div>
 
-          {/* Payment method info cards */}
+          {/* Payment method info footer */}
           <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="premium-card-gradient border border-blue-500/20">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Smartphone className="h-5 w-5 text-blue-400" />
-                  <h4 className="text-lg font-semibold text-white">Cashfree</h4>
-                </div>
-                <p className="text-blue-300 text-sm">UPI, Cards, Netbanking via Cashfree</p>
-              </CardContent>
-            </Card>
-            <Card className="premium-card-gradient border border-blue-500/20">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Banknote className="h-5 w-5 text-blue-400" />
-                  <h4 className="text-lg font-semibold text-white">Bank Transfer</h4>
-                </div>
-                <p className="text-blue-300 text-sm">International wire transfer to ICICI Bank</p>
-              </CardContent>
-            </Card>
-            <Card className="premium-card-gradient border border-blue-500/20">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <QrCode className="h-5 w-5 text-blue-400" />
-                  <h4 className="text-lg font-semibold text-white">Indian QR</h4>
-                </div>
-                <p className="text-blue-300 text-sm">Scan Indian UPI QR code for INR payments</p>
-              </CardContent>
-            </Card>
-            <Card className="premium-card-gradient border border-blue-500/20">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3 mb-4">
-                  <Earth className="h-5 w-5 text-blue-400" />
-                  <h4 className="text-lg font-semibold text-white">International QR</h4>
-                </div>
-                <p className="text-blue-300 text-sm">Scan international QR for GBP/USD payments</p>
-              </CardContent>
-            </Card>
+            {[
+              { icon: <Smartphone className="h-5 w-5 text-blue-400" />, title: 'Cashfree', desc: 'UPI, Cards, Netbanking via Cashfree' },
+              { icon: <Banknote className="h-5 w-5 text-blue-400" />, title: 'Bank Transfer', desc: 'International wire transfer to ICICI Bank' },
+              { icon: <QrCode className="h-5 w-5 text-blue-400" />, title: 'Indian QR', desc: 'Scan Indian UPI QR code for INR payments' },
+              { icon: <Earth className="h-5 w-5 text-blue-400" />, title: 'International QR', desc: 'Scan international QR for GBP/USD payments' },
+            ].map((item) => (
+              <Card key={item.title} className="premium-card-gradient border border-blue-500/20">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    {item.icon}
+                    <h4 className="text-lg font-semibold text-white">{item.title}</h4>
+                  </div>
+                  <p className="text-blue-300 text-sm">{item.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
