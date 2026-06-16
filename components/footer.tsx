@@ -259,7 +259,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-defence-saffron rounded-full"></div>
-              <span>Approved By Ministry of Defence</span>
+              <span>Trusted By Ministry of Defence</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
